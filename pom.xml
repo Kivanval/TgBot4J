@@ -13,4 +13,42 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Telegram -->
+        <dependency>
+            <groupId>com.github.rubenlagus.TelegramBots</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>v6.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.rubenlagus.TelegramBots</groupId>
+            <artifactId>telegrambots-abilities</artifactId>
+            <version>v6.0.1</version>
+        </dependency>
+        <!-- Emoji -->
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+        <!-- Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version>
+        </dependency>
+    </dependencies>
+
 </project>
