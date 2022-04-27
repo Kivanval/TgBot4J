@@ -2,6 +2,4 @@
 
 ---
 
-> **In the future, information on the bot's development status will be published here.**
-
-
+> **Now this bot can reply on your ukrainian greetings!**

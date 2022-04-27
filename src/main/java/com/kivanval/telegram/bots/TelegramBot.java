@@ -32,7 +32,9 @@ public class TelegramBot extends AbilityBot {
 
     private Predicate<Update> isGreetingProtocol() {
         return (update)
-                -> update.getMessage().getText()
+                -> update.hasMessage()
+                && update.getMessage().hasText()
+                && update.getMessage().getText()
                         .replaceAll("[\\s\\p{P}]+", " ")
                         .strip()
                         .matches("^[^\\p{L}]*[Сс][Лл][Аа][Вв][Аа] У[Кк][Рр][Аа][Її][Нн][Іі][^\\p{L}]*$");
