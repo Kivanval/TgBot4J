@@ -8,24 +8,23 @@ import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.abilitybots.api.util.AbilityUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-public class StartAbility implements AbilityExtension {
+public class HelpAbility implements AbilityExtension {
 
-    public Ability replyToStart() {
+    public Ability replyToHelp() {
         return Ability.builder()
-                .name("start")
-                .info(AbilityConstants.START_DESCRIPTION)
+                .name("help")
+                .info(AbilityConstants.HELP_DESCRIPTION)
                 .privacy(Privacy.PUBLIC)
-                .locality(Locality.USER)
+                .locality(Locality.ALL)
                 .action(ctx -> ctx.bot().silent()
                         .execute(SendMessage.builder()
                                 .disableWebPagePreview(true)
                                 .parseMode("Markdown")
                                 .chatId(String.valueOf(AbilityUtils.getChatId(ctx.update())))
-                                .text(AbilityConstants.START_REPLY)
+                                .text(AbilityConstants.HELP_REPLY)
                                 .build()
                         )
                 )
                 .build();
     }
-
 }

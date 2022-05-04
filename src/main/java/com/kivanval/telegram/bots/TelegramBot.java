@@ -1,6 +1,7 @@
 package com.kivanval.telegram.bots;
 
 import com.kivanval.telegram.abilities.GreetingAbility;
+import com.kivanval.telegram.abilities.HelpAbility;
 import com.kivanval.telegram.abilities.StartAbility;
 import com.kivanval.telegram.constants.BotConfigConstants;
 import org.telegram.abilitybots.api.bot.AbilityBot;
@@ -19,7 +20,7 @@ public class TelegramBot extends AbilityBot {
 
     public TelegramBot(String token, String username, AbilityToggle toggle) {
         super(token, username, toggle);
-        addExtensions(new GreetingAbility(), new StartAbility());
+        addExtensions(new GreetingAbility(), new StartAbility(), new HelpAbility());
     }
 
     @Override
