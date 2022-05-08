@@ -5,7 +5,6 @@ import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.Privacy;
 import org.telegram.abilitybots.api.util.AbilityExtension;
-import org.telegram.abilitybots.api.util.AbilityUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class StartAbility implements AbilityExtension {
@@ -20,12 +19,13 @@ public class StartAbility implements AbilityExtension {
                         .execute(SendMessage.builder()
                                 .disableWebPagePreview(true)
                                 .parseMode("Markdown")
-                                .chatId(String.valueOf(AbilityUtils.getChatId(ctx.update())))
+                                .chatId(String.valueOf(ctx.chatId()))
                                 .text(AbilityConstants.START_REPLY)
                                 .build()
                         )
                 )
                 .build();
     }
+
 
 }
