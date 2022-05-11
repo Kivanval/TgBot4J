@@ -1,6 +1,6 @@
 # Telegram Bot Ahasverus
 
-This bot is designed to create and manage your own queues. Each user will be able to join and track their position in the queue. It is very convenient!
+This bot is designed to create and manage your own lists. Each user will be able to join and track their position in the queue. It is very convenient!
 
 ## Last updates
 

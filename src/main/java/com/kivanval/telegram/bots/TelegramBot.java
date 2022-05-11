@@ -1,5 +1,6 @@
 package com.kivanval.telegram.bots;
 
+import com.kivanval.telegram.abilities.GreetingAbility;
 import com.kivanval.telegram.abilities.HelpAbility;
 import com.kivanval.telegram.abilities.StartAbility;
 import com.kivanval.telegram.constants.AbilityConstants;
@@ -39,21 +40,8 @@ public class TelegramBot extends AbilityBot {
         super(token, username, toggle);
     }
 
-    public Reply replyToGreeting() {
-        BiConsumer<BaseAbilityBot, Update> action = (bot, update) -> bot.silent()
-                .execute(SendMessage.builder()
-                        .chatId(String.valueOf(getChatId(update)))
-                        .replyToMessageId(update.getMessage().getMessageId())
-                        .text(AbilityConstants.GREETING_REPLY)
-                        .build()
-                );
-
-        return Reply.of(action, Flag.MESSAGE, Flag.TEXT, isGreetingProtocol());
-    }
-
-    private Predicate<Update> isGreetingProtocol() {
-        return (update) -> update.getMessage().getText()
-                .matches("^(?iu)[^\\p{L}]*СЛАВА\\s+УКРАЇНІ[^\\p{L}]*$");
+    public AbilityExtension replyToGreeting() {
+        return new GreetingAbility();
     }
 
     public AbilityExtension replyToHelp() {

@@ -11,7 +11,7 @@ public class StartAbility implements AbilityExtension {
 
     public Ability replyToStart() {
         return Ability.builder()
-                .name("start")
+                .name(AbilityConstants.START)
                 .info(AbilityConstants.START_DESCRIPTION)
                 .privacy(Privacy.PUBLIC)
                 .locality(Locality.USER)

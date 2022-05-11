@@ -11,7 +11,7 @@ public class HelpAbility implements AbilityExtension {
 
     public Ability replyToHelp() {
         return Ability.builder()
-                .name("help")
+                .name(AbilityConstants.HELP)
                 .info(AbilityConstants.HELP_DESCRIPTION)
                 .privacy(Privacy.PUBLIC)
                 .locality(Locality.ALL)

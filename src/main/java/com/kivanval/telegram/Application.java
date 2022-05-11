@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class Application {
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         try {
             // Create the TelegramBotsApi object
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);

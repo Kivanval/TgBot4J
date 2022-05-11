@@ -1,9 +1,7 @@
 package com.kivanval.telegram.bots;
 
 import com.kivanval.telegram.constants.AbilityConstants;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
@@ -17,7 +15,7 @@ import java.io.IOException;
 
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
-class TelegramBotTest {
+class BotAbilityTest {
     private static TelegramBot bot;
 
     private static SilentSender silent;
@@ -37,6 +35,7 @@ class TelegramBotTest {
 
     @ParameterizedTest
     @MethodSource("com.kivanval.telegram.bots.UpdatesArguments#provideUpdatesForCanReplyToGreeting")
+    @Disabled
     public void canReplyToGreeting(Update update) {
         bot.onUpdateReceived(update);
 
