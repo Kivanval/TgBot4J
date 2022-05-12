@@ -1,6 +1,7 @@
 package com.kivanval.telegram.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +26,6 @@ public class TelegramUser {
 
     @Column(name = "first_name", nullable = false)
     @NotEmpty
-    @NotNull
     protected String firstName;
 
     @Column(name = "is_bot", nullable = false)
@@ -40,8 +40,7 @@ public class TelegramUser {
     protected String userName;
 
     @Column(name = "language_code")
-    @NotEmpty
-    @NotBlank
+    @Size(min = 1)
     protected String languageCode;
 
     @Column(name = "can_join_groups")
@@ -65,7 +64,7 @@ public class TelegramUser {
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY)
     protected Set<TelegramList> adminLists = new HashSet<>();
 
-    public TelegramUser(@NotNull Long id, @NotEmpty @NotNull String firstName, @NotNull Boolean isBot, String lastName, @Size(min = 5, max = 32) String userName, @NotEmpty @NotBlank String languageCode, Boolean canJoinGroups, Boolean canReadAllGroupMessages, Boolean supportInlineQueries) {
+    public TelegramUser(@NotNull Long id, @NotEmpty @NotNull String firstName, @NotNull Boolean isBot, String lastName, @Size(min = 5, max = 32) String userName, @Size(min = 1) String languageCode, Boolean canJoinGroups, Boolean canReadAllGroupMessages, Boolean supportInlineQueries) {
         this.id = id;
         this.firstName = firstName;
         this.isBot = isBot;
@@ -127,7 +126,7 @@ public class TelegramUser {
         return this.userName;
     }
 
-    public @NotEmpty @NotBlank String getLanguageCode() {
+    public @Size(min = 1) String getLanguageCode() {
         return this.languageCode;
     }
 
@@ -175,7 +174,7 @@ public class TelegramUser {
         this.userName = userName;
     }
 
-    public void setLanguageCode(@NotEmpty @NotBlank String languageCode) {
+    public void setLanguageCode(@Size(min = 1) String languageCode) {
         this.languageCode = languageCode;
     }
 

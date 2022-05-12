@@ -8,7 +8,6 @@ import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,6 +21,7 @@ public class TelegramList {
     protected Long id;
 
     @Column(name = "access_key", nullable = false, unique = true)
+    @Pattern(regexp = "(?i)[\\w&&[^_]]{10}")
     @Size(min = 10, max = 10)
     protected String accessKey;
 
@@ -55,9 +55,9 @@ public class TelegramList {
     protected Set<ListedNumber> listedNumbers = new HashSet<>();
 
     @ManyToMany(mappedBy = "managedLists")
-    protected Set<TelegramUser> managers = new LinkedHashSet<>();
+    protected Set<TelegramUser> managers = new HashSet<>();
 
-    public TelegramList(@NotNull Long id, @Size(min = 10, max = 10) String accessKey, @Size(min = 1, max = 255) String name, @NotNull Boolean isActive, @Positive Integer maxSize, @PastOrPresent @NotNull LocalDateTime startDate, @Future LocalDateTime endDate, @NotNull TelegramUser admin) {
+    public TelegramList(@NotNull Long id, @Pattern(regexp = "(?i)[\\w&&[^_]]{10}") @Size(min = 10, max = 10) String accessKey, @Size(min = 1, max = 255) String name, @NotNull Boolean isActive, @Positive Integer maxSize, @PastOrPresent @NotNull LocalDateTime startDate, @Future LocalDateTime endDate, @NotNull TelegramUser admin) {
         this.id = id;
         this.accessKey = accessKey;
         this.name = name;
@@ -89,7 +89,7 @@ public class TelegramList {
         return this.id;
     }
 
-    public @Size(min = 10, max = 10) String getAccessKey() {
+    public @Pattern(regexp = "(?i)[\\w&&[^_]]{10}") @Size(min = 10, max = 10) String getAccessKey() {
         return this.accessKey;
     }
 
@@ -129,7 +129,7 @@ public class TelegramList {
         this.id = id;
     }
 
-    public void setAccessKey(@Size(min = 10, max = 10) String accessKey) {
+    public void setAccessKey(@Pattern(regexp = "(?i)[\\w&&[^_]]{10}") @Size(min = 10, max = 10) String accessKey) {
         this.accessKey = accessKey;
     }
 
@@ -178,4 +178,5 @@ public class TelegramList {
                 .append("admin", admin)
                 .toString();
     }
+
 }

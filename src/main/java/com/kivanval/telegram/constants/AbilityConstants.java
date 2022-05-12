@@ -34,9 +34,6 @@ public interface AbilityConstants {
             /%s - %s
                         
             *Manage lists*
-            /%s - %s
-            /%s - %s
-            /%s - %s
-                        
+            ---
             """).formatted(START, START_DESCRIPTION, HELP, HELP_DESCRIPTION);
 }
