@@ -40,7 +40,7 @@ public class TelegramBot extends AbilityBot {
         return new GreetingAbility();
     }
 
-    public void setSilentSender(SilentSender silent) {
+    protected void setSilentSender(SilentSender silent) {
         this.silent = silent;
     }
 

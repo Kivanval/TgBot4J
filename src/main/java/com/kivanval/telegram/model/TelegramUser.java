@@ -1,11 +1,7 @@
 package com.kivanval.telegram.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.Hibernate;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -36,7 +32,7 @@ public class TelegramUser {
     protected String lastName;
 
     @Column(name = "user_name", unique = true)
-    @Size(min = 5, max = 32)
+    @Pattern(regexp = "\\w{5,32}")
     protected String userName;
 
     @Column(name = "language_code")
@@ -61,10 +57,12 @@ public class TelegramUser {
             inverseJoinColumns = @JoinColumn(name = "list_id"))
     protected Set<TelegramList> managedLists = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     protected Set<TelegramList> adminLists = new HashSet<>();
 
-    public TelegramUser(@NotNull Long id, @NotEmpty @NotNull String firstName, @NotNull Boolean isBot, String lastName, @Size(min = 5, max = 32) String userName, @Size(min = 1) String languageCode, Boolean canJoinGroups, Boolean canReadAllGroupMessages, Boolean supportInlineQueries) {
+    private TelegramUser(Long id, String firstName, Boolean isBot, String lastName,
+                        String userName, String languageCode,
+                        Boolean canJoinGroups, Boolean canReadAllGroupMessages, Boolean supportInlineQueries) {
         this.id = id;
         this.firstName = firstName;
         this.isBot = isBot;
@@ -110,7 +108,7 @@ public class TelegramUser {
         return this.id;
     }
 
-    public @NotEmpty @NotNull String getFirstName() {
+    public @NotEmpty String getFirstName() {
         return this.firstName;
     }
 
@@ -122,7 +120,7 @@ public class TelegramUser {
         return this.lastName;
     }
 
-    public @Size(min = 5, max = 32) String getUserName() {
+    public @Pattern(regexp = "\\w{5,32}") String getUserName() {
         return this.userName;
     }
 
@@ -158,7 +156,7 @@ public class TelegramUser {
         this.id = id;
     }
 
-    public void setFirstName(@NotEmpty @NotNull String firstName) {
+    public void setFirstName(@NotEmpty String firstName) {
         this.firstName = firstName;
     }
 
@@ -170,7 +168,7 @@ public class TelegramUser {
         this.lastName = lastName;
     }
 
-    public void setUserName(@Size(min = 5, max = 32) String userName) {
+    public void setUserName(@Pattern(regexp = "\\w{5,32}") String userName) {
         this.userName = userName;
     }
 

@@ -2,6 +2,7 @@ package com.kivanval.telegram.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.Hibernate;
@@ -21,7 +22,7 @@ public class TelegramList {
     protected Long id;
 
     @Column(name = "access_key", nullable = false, unique = true)
-    @Pattern(regexp = "(?i)[\\w&&[^_]]{10}")
+    @Pattern(regexp = "[\\w&&[^_]]{10}")
     @Size(min = 10, max = 10)
     protected String accessKey;
 
@@ -30,8 +31,7 @@ public class TelegramList {
     protected String name;
 
     @Column(name = "is_active", nullable = false)
-    @NotNull
-    protected Boolean isActive;
+    protected boolean isFreeze;
 
     @Column(name = "max_size")
     @Positive
@@ -48,29 +48,15 @@ public class TelegramList {
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
+    @Valid
     @NotNull
     protected TelegramUser admin;
 
     @OneToMany(mappedBy = "list", fetch = FetchType.LAZY)
     protected Set<ListedNumber> listedNumbers = new HashSet<>();
 
-    @ManyToMany(mappedBy = "managedLists")
+    @ManyToMany(mappedBy = "managedLists", fetch = FetchType.LAZY)
     protected Set<TelegramUser> managers = new HashSet<>();
-
-    public TelegramList(@NotNull Long id, @Pattern(regexp = "(?i)[\\w&&[^_]]{10}") @Size(min = 10, max = 10) String accessKey, @Size(min = 1, max = 255) String name, @NotNull Boolean isActive, @Positive Integer maxSize, @PastOrPresent @NotNull LocalDateTime startDate, @Future LocalDateTime endDate, @NotNull TelegramUser admin) {
-        this.id = id;
-        this.accessKey = accessKey;
-        this.name = name;
-        this.isActive = isActive;
-        this.maxSize = maxSize;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.admin = admin;
-    }
-
-    public TelegramList() {
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -97,8 +83,8 @@ public class TelegramList {
         return this.name;
     }
 
-    public @NotNull Boolean getIsActive() {
-        return this.isActive;
+    public @NotNull Boolean getIsFreeze() {
+        return this.isFreeze;
     }
 
     public @Positive Integer getMaxSize() {
@@ -137,8 +123,8 @@ public class TelegramList {
         this.name = name;
     }
 
-    public void setIsActive(@NotNull Boolean isActive) {
-        this.isActive = isActive;
+    public void setIsFreeze(@NotNull Boolean isFreeze) {
+        this.isFreeze = isFreeze;
     }
 
     public void setMaxSize(@Positive Integer maxSize) {
@@ -171,7 +157,7 @@ public class TelegramList {
                 .append("id", id)
                 .append("accessKey", accessKey)
                 .append("name", name)
-                .append("isActive", isActive)
+                .append("isFreeze", isFreeze)
                 .append("maxSize", maxSize)
                 .append("startDate", startDate)
                 .append("endDate", endDate)

@@ -23,12 +23,12 @@ public class ListedNumber {
     @NotNull
     protected ListedNumberKey id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("listId")
     @JoinColumn(name = "list_id")
     protected TelegramList list;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("courseId")
     @JoinColumn(name = "user_id")
     protected TelegramUser user;
