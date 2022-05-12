@@ -7,13 +7,12 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class TelegramUserTest {
@@ -42,17 +41,29 @@ class TelegramUserTest {
 
     @ParameterizedTest
     @NullSource
-    @EmptySource
-    public void firstNameIsNullOrEmpty(String firstName) {
+    public void firstNameIsNull(String firstName) {
         TelegramUser user = new TelegramUser();
         user.id = 10903L;
         user.firstName = firstName;
-        user.isBot = false;
+        user.isBot = true;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("must not be empty", constraintViolations.iterator().next().getMessage());
+        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void firstNameTooShort() {
+        TelegramUser user = new TelegramUser();
+        user.id = 10903L;
+        user.firstName = "";
+        user.isBot = true;
+        Set<ConstraintViolation<TelegramUser>> constraintViolations =
+                validator.validate(user);
+
+        assertEquals(1, constraintViolations.size());
+        assertEquals("size must be between 1 and 255", constraintViolations.iterator().next().getMessage());
     }
 
     @ParameterizedTest
@@ -94,5 +105,6 @@ class TelegramUserTest {
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);
 
-        assertEquals(0, constraintViolations.size());}
+        assertEquals(0, constraintViolations.size());
+    }
 }

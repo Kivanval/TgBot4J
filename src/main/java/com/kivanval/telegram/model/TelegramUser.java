@@ -1,14 +1,14 @@
 package com.kivanval.telegram.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.Hibernate;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -21,22 +21,25 @@ public class TelegramUser {
     protected Long id;
 
     @Column(name = "first_name", nullable = false)
-    @NotEmpty
+    @Size(min = 1, max = 255)
+    @NotNull
     protected String firstName;
 
     @Column(name = "is_bot", nullable = false)
-    @NotNull
     protected Boolean isBot;
 
+
     @Column(name = "last_name")
+    @Size(max = 255)
     protected String lastName;
 
     @Column(name = "user_name", unique = true)
     @Pattern(regexp = "\\w{5,32}")
     protected String userName;
 
+    @Lob
     @Column(name = "language_code")
-    @Size(min = 1)
+    @Size(min = 1, max = 255)
     protected String languageCode;
 
     @Column(name = "can_join_groups")
@@ -60,9 +63,13 @@ public class TelegramUser {
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     protected Set<TelegramList> adminLists = new HashSet<>();
 
-    private TelegramUser(Long id, String firstName, Boolean isBot, String lastName,
-                        String userName, String languageCode,
-                        Boolean canJoinGroups, Boolean canReadAllGroupMessages, Boolean supportInlineQueries) {
+    public TelegramUser() {
+    }
+
+    public TelegramUser(@NotNull Long id, @Size(min = 1, max = 255) String firstName, @NotNull Boolean isBot,
+                        @Size(max = 255) String lastName, @Pattern(regexp = "\\w{5,32}") String userName,
+                        @Size(min = 1, max = 255) String languageCode, Boolean canJoinGroups,
+                        Boolean canReadAllGroupMessages, Boolean supportInlineQueries) {
         this.id = id;
         this.firstName = firstName;
         this.isBot = isBot;
@@ -73,10 +80,6 @@ public class TelegramUser {
         this.canReadAllGroupMessages = canReadAllGroupMessages;
         this.supportInlineQueries = supportInlineQueries;
     }
-
-    public TelegramUser() {
-    }
-
 
     public static TelegramUser from(@NotNull User user) {
         Long id = user.getId();
@@ -91,13 +94,6 @@ public class TelegramUser {
         return new TelegramUser(id, firstName, isBot, lastName, userName, languageCode, canJoinGroups, canReadAllGroupMessages, supportInlineQueries);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        TelegramUser that = (TelegramUser) o;
-        return id != null && Objects.equals(id, that.id);
-    }
 
     @Override
     public int hashCode() {
@@ -108,7 +104,7 @@ public class TelegramUser {
         return this.id;
     }
 
-    public @NotEmpty String getFirstName() {
+    public @Size(min = 1, max = 255) String getFirstName() {
         return this.firstName;
     }
 
@@ -116,7 +112,7 @@ public class TelegramUser {
         return this.isBot;
     }
 
-    public String getLastName() {
+    public @Size(max = 255) String getLastName() {
         return this.lastName;
     }
 
@@ -124,7 +120,7 @@ public class TelegramUser {
         return this.userName;
     }
 
-    public @Size(min = 1) String getLanguageCode() {
+    public @Size(min = 1, max = 255) String getLanguageCode() {
         return this.languageCode;
     }
 
@@ -156,7 +152,7 @@ public class TelegramUser {
         this.id = id;
     }
 
-    public void setFirstName(@NotEmpty String firstName) {
+    public void setFirstName(@Size(min = 1, max = 255) String firstName) {
         this.firstName = firstName;
     }
 
@@ -164,7 +160,7 @@ public class TelegramUser {
         this.isBot = isBot;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(@Size(max = 255) String lastName) {
         this.lastName = lastName;
     }
 
@@ -172,7 +168,7 @@ public class TelegramUser {
         this.userName = userName;
     }
 
-    public void setLanguageCode(@Size(min = 1) String languageCode) {
+    public void setLanguageCode(@Size(min = 1, max = 255) String languageCode) {
         this.languageCode = languageCode;
     }
 

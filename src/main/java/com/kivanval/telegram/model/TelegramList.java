@@ -22,16 +22,18 @@ public class TelegramList {
     protected Long id;
 
     @Column(name = "access_key", nullable = false, unique = true)
-    @Pattern(regexp = "[\\w&&[^_]]{10}")
-    @Size(min = 10, max = 10)
+    @Pattern(regexp = "\\w{10}")
+    @NotNull
     protected String accessKey;
 
-    @Column(name = "name", nullable = false, unique = true)
-    @Size(min = 1, max = 255)
-    protected String name;
+    @Lob
+    @Column(name = "alias", nullable = false, unique = true)
+    @Size(min = 1)
+    protected String alias;
 
-    @Column(name = "is_active", nullable = false)
-    protected boolean isFreeze;
+    @Column(name = "is_freeze", nullable = false)
+    @NotNull
+    protected Boolean isFreeze;
 
     @Column(name = "max_size")
     @Positive
@@ -52,7 +54,7 @@ public class TelegramList {
     @NotNull
     protected TelegramUser admin;
 
-    @OneToMany(mappedBy = "list", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "list", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     protected Set<ListedNumber> listedNumbers = new HashSet<>();
 
     @ManyToMany(mappedBy = "managedLists", fetch = FetchType.LAZY)
@@ -75,12 +77,12 @@ public class TelegramList {
         return this.id;
     }
 
-    public @Pattern(regexp = "(?i)[\\w&&[^_]]{10}") @Size(min = 10, max = 10) String getAccessKey() {
+    public @Pattern(regexp = "\\w{10}") String getAccessKey() {
         return this.accessKey;
     }
 
-    public @Size(min = 1, max = 255) String getName() {
-        return this.name;
+    public @Size(min = 1) String getAlias() {
+        return this.alias;
     }
 
     public @NotNull Boolean getIsFreeze() {
@@ -115,12 +117,12 @@ public class TelegramList {
         this.id = id;
     }
 
-    public void setAccessKey(@Pattern(regexp = "(?i)[\\w&&[^_]]{10}") @Size(min = 10, max = 10) String accessKey) {
+    public void setAccessKey(@Pattern(regexp = "\\w{10}") String accessKey) {
         this.accessKey = accessKey;
     }
 
-    public void setName(@Size(min = 1, max = 255) String name) {
-        this.name = name;
+    public void setAlias(@Size(min = 1) String alias) {
+        this.alias = alias;
     }
 
     public void setIsFreeze(@NotNull Boolean isFreeze) {
@@ -156,7 +158,7 @@ public class TelegramList {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("accessKey", accessKey)
-                .append("name", name)
+                .append("name", alias)
                 .append("isFreeze", isFreeze)
                 .append("maxSize", maxSize)
                 .append("startDate", startDate)
