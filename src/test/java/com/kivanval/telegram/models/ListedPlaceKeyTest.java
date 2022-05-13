@@ -1,4 +1,4 @@
-package com.kivanval.telegram.model;
+package com.kivanval.telegram.models;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ListedNumberKeyTest {
+class ListedPlaceKeyTest {
 
     private static Validator validator;
 
@@ -26,9 +26,9 @@ class ListedNumberKeyTest {
     @ParameterizedTest
     @NullSource
     public void listIdIsNull(Long listId) {
-        ListedNumberKey key = getValidListedNumberKey();
+        ListedPlaceKey key = getValidListedNumberKey();
         key.listId = listId;
-        Set<ConstraintViolation<ListedNumberKey>> constraintViolations =
+        Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
                 validator.validate(key);
 
         assertEquals(1, constraintViolations.size());
@@ -38,9 +38,9 @@ class ListedNumberKeyTest {
     @ParameterizedTest
     @NullSource
     public void userIdIsNull(Long userId) {
-        ListedNumberKey key = getValidListedNumberKey();
+        ListedPlaceKey key = getValidListedNumberKey();
         key.userId = userId;
-        Set<ConstraintViolation<ListedNumberKey>> constraintViolations =
+        Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
                 validator.validate(key);
 
         assertEquals(1, constraintViolations.size());
@@ -48,17 +48,16 @@ class ListedNumberKeyTest {
     }
 
     @Test
-    public void ListedNumberKeyIsValid() {
-        ListedNumberKey key = getValidListedNumberKey();
-        Set<ConstraintViolation<ListedNumberKey>> constraintViolations =
+    public void listedNumberKeyIsValid() {
+        ListedPlaceKey key = getValidListedNumberKey();
+        Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
                 validator.validate(key);
 
         assertEquals(0, constraintViolations.size());
     }
 
-
-    static ListedNumberKey getValidListedNumberKey() {
-        ListedNumberKey key = new ListedNumberKey();
+    static ListedPlaceKey getValidListedNumberKey() {
+        ListedPlaceKey key = new ListedPlaceKey();
         key.listId = 0L;
         key.userId = 0L;
         return key;

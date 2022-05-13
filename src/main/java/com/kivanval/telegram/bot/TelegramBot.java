@@ -1,4 +1,4 @@
-package com.kivanval.telegram.bots;
+package com.kivanval.telegram.bot;
 
 import com.kivanval.telegram.abilities.GreetingAbility;
 import com.kivanval.telegram.abilities.HelpAbility;

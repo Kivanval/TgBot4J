@@ -1,4 +1,4 @@
-package com.kivanval.telegram.model;
+package com.kivanval.telegram.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "LISTED_NUMBER")
+@Table(name = "LISTED_NUMBERS")
 @Getter
 @Setter
 @ToString
-public class ListedNumber implements Serializable {
+public class ListedPlace implements Serializable {
 
     public enum State {
         WAITING, AWAY, SERVED, DELETED
@@ -28,42 +28,60 @@ public class ListedNumber implements Serializable {
     @EmbeddedId
     @Valid
     @NotNull
-    protected ListedNumberKey id;
+    protected ListedPlaceKey id;
 
     @ManyToOne
     @MapsId("listId")
-    @JoinColumn(name = "list_id", nullable = false)
+    @JoinColumn(
+            name = "list_id",
+            referencedColumnName = "id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "listed_numbers_list_id_fkey")
+    )
     @Valid
     @NotNull
     protected TelegramList list;
 
     @ManyToOne
     @MapsId("courseId")
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "listed_numbers_user_id_fkey")
+    )
     @Valid
     @NotNull
     protected TelegramUser user;
 
-    @Enumerated
-    @Column(name = "state", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(
+            name = "state",
+            nullable = false
+    )
     @NotNull
     protected State state;
 
-    @Column(name = "entry_date", nullable = false)
+    @Column(
+            name = "entry_date",
+            nullable = false
+    )
     @PastOrPresent
     @NotNull
     protected LocalDateTime entryDate;
 
-    @Column(nullable = false)
+    @Column(
+            name = "place_number",
+            nullable = false)
     @Positive
     @NotNull
-    protected Integer number;
+    protected Integer placeNumber;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        ListedNumber that = (ListedNumber) o;
+        ListedPlace that = (ListedPlace) o;
         return id != null && Objects.equals(id, that.id);
     }
 

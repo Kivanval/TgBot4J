@@ -1,4 +1,4 @@
-package com.kivanval.telegram.model;
+package com.kivanval.telegram.models;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ListedNumberTest {
+class ListedPlaceTest {
 
     private static Validator validator;
 
@@ -26,11 +26,11 @@ class ListedNumberTest {
 
     @ParameterizedTest
     @NullSource
-    public void KeyIsNull(ListedNumberKey key) {
-        ListedNumber number = getValidListedNumber();
-        number.id = key;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+    public void keyIsNull(ListedPlaceKey key) {
+        ListedPlace place = getValidListedNumber();
+        place.id = key;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
@@ -38,10 +38,10 @@ class ListedNumberTest {
 
     @Test
     public void keyNotValid() {
-        ListedNumber number = getValidListedNumber();
-        number.id.listId = null;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.id.listId = null;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
@@ -49,10 +49,10 @@ class ListedNumberTest {
 
     @Test
     public void listNotValid() {
-        ListedNumber number = getValidListedNumber();
-        number.list.id = null;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.list.id = null;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
@@ -60,10 +60,10 @@ class ListedNumberTest {
 
     @Test
     public void userNotValid() {
-        ListedNumber number = getValidListedNumber();
-        number.user.id = null;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.user.id = null;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
@@ -71,10 +71,10 @@ class ListedNumberTest {
 
     @Test
     public void stateInNull() {
-        ListedNumber number = getValidListedNumber();
-        number.state = null;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.state = null;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
@@ -83,10 +83,10 @@ class ListedNumberTest {
 
     @Test
     public void entryDateIsNull() {
-        ListedNumber number = getValidListedNumber();
-        number.entryDate = null;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.entryDate = null;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
@@ -94,10 +94,10 @@ class ListedNumberTest {
 
     @Test
     public void entryDateInTheFuture() {
-        ListedNumber number = getValidListedNumber();
-        number.entryDate = LocalDateTime.MAX;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.entryDate = LocalDateTime.MAX;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must be a date in the past or in the present", constraintViolations.iterator().next().getMessage());
@@ -105,10 +105,10 @@ class ListedNumberTest {
 
     @Test
     public void numberIsNull() {
-        ListedNumber number = getValidListedNumber();
-        number.number = null;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.placeNumber = null;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
@@ -116,27 +116,24 @@ class ListedNumberTest {
 
     @Test
     public void numberLessThanZero() {
-        ListedNumber number = getValidListedNumber();
-        number.number = 0;
-        Set<ConstraintViolation<ListedNumber>> constraintViolations =
-                validator.validate(number);
+        ListedPlace place = getValidListedNumber();
+        place.placeNumber = 0;
+        Set<ConstraintViolation<ListedPlace>> constraintViolations =
+                validator.validate(place);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("must be greater than 0", constraintViolations.iterator().next().getMessage());
     }
 
-
-
-
-    static ListedNumber getValidListedNumber() {
-        ListedNumber number = new ListedNumber();
-        number.id = ListedNumberKeyTest.getValidListedNumberKey();
-        number.list = TelegramListTest.getValidTelegramList();
-        number.user = TelegramUserTest.getValidTelegramUser();
-        number.state = ListedNumber.State.WAITING;
-        number.entryDate = LocalDateTime.MIN;
-        number.number = 1;
-        return number;
+    static ListedPlace getValidListedNumber() {
+        ListedPlace place = new ListedPlace();
+        place.id = ListedPlaceKeyTest.getValidListedNumberKey();
+        place.list = TelegramListTest.getValidTelegramList();
+        place.user = TelegramUserTest.getValidTelegramUser();
+        place.state = ListedPlace.State.WAITING;
+        place.entryDate = LocalDateTime.MIN;
+        place.placeNumber = 1;
+        return place;
     }
 
 }

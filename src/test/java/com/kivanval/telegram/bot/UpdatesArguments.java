@@ -1,4 +1,4 @@
-package com.kivanval.telegram.bots;
+package com.kivanval.telegram.bot;
 
 import org.junit.jupiter.params.provider.Arguments;
 import org.telegram.telegrambots.meta.api.objects.Chat;

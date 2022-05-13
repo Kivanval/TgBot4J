@@ -1,6 +1,6 @@
 package com.kivanval.telegram;
 
-import com.kivanval.telegram.bots.TelegramBot;
+import com.kivanval.telegram.bot.TelegramBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -19,4 +19,5 @@ public class Application {
         }
     }
 }
+
 

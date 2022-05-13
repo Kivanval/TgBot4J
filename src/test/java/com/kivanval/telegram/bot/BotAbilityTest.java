@@ -1,4 +1,4 @@
-package com.kivanval.telegram.bots;
+package com.kivanval.telegram.bot;
 
 import com.kivanval.telegram.constants.AbilityConstants;
 import org.junit.jupiter.api.*;
@@ -35,7 +35,7 @@ class BotAbilityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("com.kivanval.telegram.bots.UpdatesArguments#provideUpdatesForCanReplyToGreeting")
+    @MethodSource("com.kivanval.telegram.bot.UpdatesArguments#provideUpdatesForCanReplyToGreeting")
     public void canReplyToGreeting(Update update) {
         assertNotNull(update);
         bot.onUpdateReceived(update);

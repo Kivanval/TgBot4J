@@ -1,4 +1,4 @@
-package com.kivanval.telegram.model;
+package com.kivanval.telegram.models;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -27,7 +27,7 @@ class TelegramUserTest {
 
     @ParameterizedTest
     @NullSource
-    public void IdIsNull(Long id) {
+    public void idIsNull(Long id) {
         TelegramUser user = getValidTelegramUser();
         user.id = id;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =

@@ -1,4 +1,4 @@
-package com.kivanval.telegram.model;
+package com.kivanval.telegram.models;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -26,7 +26,7 @@ class TelegramListTest {
 
     @ParameterizedTest
     @NullSource
-    public void IdIsNull(Long id) {
+    public void idIsNull(Long id) {
         TelegramList list = getValidTelegramList();
         list.id = id;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -38,7 +38,7 @@ class TelegramListTest {
 
     @ParameterizedTest
     @NullSource
-    public void AccessKeyIsNull(String accessKey) {
+    public void accessKeyIsNull(String accessKey) {
         TelegramList list = getValidTelegramList();
         list.accessKey = accessKey;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -50,7 +50,7 @@ class TelegramListTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"test", "testtesttest", "he!!oworld"})
-    public void AccessKeyNotPattern(String accessKey) {
+    public void accessKeyNotPattern(String accessKey) {
         TelegramList list = getValidTelegramList();
         list.accessKey = accessKey;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -61,14 +61,14 @@ class TelegramListTest {
     }
 
     @Test
-    public void AliasTooShort() {
+    public void aliasTooShort() {
         TelegramList list = getValidTelegramList();
         list.alias = "";
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("size must be between 1 and 2147483647", constraintViolations.iterator().next().getMessage());
+        assertEquals("size must be between 1 and 255", constraintViolations.iterator().next().getMessage());
     }
 
     @ParameterizedTest

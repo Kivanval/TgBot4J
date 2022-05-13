@@ -1,4 +1,4 @@
-package com.kivanval.telegram.model;
+package com.kivanval.telegram.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -15,7 +15,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "USERS")
+@Table(
+        name = "USERS",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"user_name"},
+                        name = "users_user_name_uq")
+        }
+)
 @Getter
 @Setter
 @ToString
@@ -27,7 +34,10 @@ public class TelegramUser implements Serializable {
     protected Long id;
 
     @Column(name = "first_name", nullable = false)
-    @Size(min = 1, max = 255)
+    @Size(
+            min = 1,
+            max = 255
+    )
     @NotNull
     protected String firstName;
 
@@ -40,13 +50,15 @@ public class TelegramUser implements Serializable {
     @Size(max = 255)
     protected String lastName;
 
-    @Column(name = "user_name", unique = true)
+    @Column(name = "user_name")
     @Pattern(regexp = "\\w{5,32}")
     protected String userName;
 
-    @Lob
     @Column(name = "language_code")
-    @Size(min = 1, max = 255)
+    @Size(
+            min = 1,
+            max = 255
+    )
     protected String languageCode;
 
     @Column(name = "can_join_groups")
@@ -58,19 +70,42 @@ public class TelegramUser implements Serializable {
     @Column(name = "supports_inline_queries")
     protected Boolean supportInlineQueries;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL}
+    )
     @ToString.Exclude
-    protected Set<@Valid ListedNumber> listedNumbers = new HashSet<>();
+    protected Set<@Valid ListedPlace> listedPlaces = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinTable(name = "MANAGERS_LISTS",
-            joinColumns = @JoinColumn(name = "manager_id"),
-            inverseJoinColumns = @JoinColumn(name = "list_id"))
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL}
+    )
+    @JoinTable(
+            name = "MANAGERS_LISTS",
+            joinColumns = @JoinColumn(
+                    name = "manager_id",
+                    referencedColumnName = "id",
+                    nullable = false,
+                    foreignKey = @ForeignKey(name = "managers_lists_user_id_fkey")
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "list_id",
+                    referencedColumnName = "id",
+                    nullable = false,
+                    foreignKey = @ForeignKey(name = "managers_lists_list_id_fkey")
+            )
+    )
     @NotNull
     @ToString.Exclude
     protected Set<@Valid TelegramList> managedLists = new HashSet<>();
 
-    @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(
+            mappedBy = "admin",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL}
+    )
     @NotNull
     @ToString.Exclude
     protected Set<@Valid TelegramList> adminLists = new HashSet<>();
