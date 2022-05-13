@@ -1,37 +1,53 @@
 package com.kivanval.telegram.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(
-        name = "LISTED_NUMBER",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"list_id", "number"})
-        }
-)
-public class ListedNumber {
+@Table(name = "LISTED_NUMBER")
+@Getter
+@Setter
+@ToString
+public class ListedNumber implements Serializable {
+
+    public enum State {
+        WAITING, AWAY, SERVED, DELETED
+    }
 
     @EmbeddedId
+    @Valid
     @NotNull
     protected ListedNumberKey id;
 
     @ManyToOne
     @MapsId("listId")
-    @JoinColumn(name = "list_id")
+    @JoinColumn(name = "list_id", nullable = false)
+    @Valid
+    @NotNull
     protected TelegramList list;
 
     @ManyToOne
     @MapsId("courseId")
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
+    @Valid
+    @NotNull
     protected TelegramUser user;
+
+    @Enumerated
+    @Column(name = "state", nullable = false)
+    @NotNull
+    protected State state;
 
     @Column(name = "entry_date", nullable = false)
     @PastOrPresent
@@ -56,53 +72,4 @@ public class ListedNumber {
         return Objects.hash(id);
     }
 
-    public @NotNull ListedNumberKey getId() {
-        return this.id;
-    }
-
-    public TelegramList getList() {
-        return this.list;
-    }
-
-    public TelegramUser getUser() {
-        return this.user;
-    }
-
-    public @PastOrPresent @NotNull LocalDateTime getEntryDate() {
-        return this.entryDate;
-    }
-
-    public @Positive @NotNull Integer getNumber() {
-        return this.number;
-    }
-
-    public void setId(@NotNull ListedNumberKey id) {
-        this.id = id;
-    }
-
-    public void setList(TelegramList list) {
-        this.list = list;
-    }
-
-    public void setUser(TelegramUser user) {
-        this.user = user;
-    }
-
-    public void setEntryDate(@PastOrPresent @NotNull LocalDateTime entryDate) {
-        this.entryDate = entryDate;
-    }
-
-    public void setNumber(@Positive @NotNull Integer number) {
-        this.number = number;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("list", list)
-                .append("user", user)
-                .append("number", number)
-                .toString();
-    }
 }

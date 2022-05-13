@@ -28,10 +28,8 @@ class TelegramUserTest {
     @ParameterizedTest
     @NullSource
     public void IdIsNull(Long id) {
-        TelegramUser user = new TelegramUser();
+        TelegramUser user = getValidTelegramUser();
         user.id = id;
-        user.firstName = "test";
-        user.isBot = false;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);
 
@@ -42,10 +40,8 @@ class TelegramUserTest {
     @ParameterizedTest
     @NullSource
     public void firstNameIsNull(String firstName) {
-        TelegramUser user = new TelegramUser();
-        user.id = 10903L;
+        TelegramUser user = getValidTelegramUser();
         user.firstName = firstName;
-        user.isBot = true;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);
 
@@ -55,10 +51,8 @@ class TelegramUserTest {
 
     @Test
     public void firstNameTooShort() {
-        TelegramUser user = new TelegramUser();
-        user.id = 10903L;
+        TelegramUser user = getValidTelegramUser();
         user.firstName = "";
-        user.isBot = true;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);
 
@@ -69,9 +63,7 @@ class TelegramUserTest {
     @ParameterizedTest
     @NullSource
     public void isBotIsNull(Boolean isBot) {
-        TelegramUser user = new TelegramUser();
-        user.id = 10903L;
-        user.firstName = "test";
+        TelegramUser user = getValidTelegramUser();
         user.isBot = isBot;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);
@@ -83,10 +75,7 @@ class TelegramUserTest {
     @ParameterizedTest
     @ValueSource(strings = {"test", "testTestTestTestTestTestTestTestT", "Тестування"})
     public void userNameNotPatter(String userName) {
-        TelegramUser user = new TelegramUser();
-        user.id = 10903L;
-        user.firstName = "test";
-        user.isBot = false;
+        TelegramUser user = getValidTelegramUser();
         user.userName = userName;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);
@@ -97,14 +86,19 @@ class TelegramUserTest {
 
     @Test
     public void userIsValid() {
+        TelegramUser user = getValidTelegramUser();
+        Set<ConstraintViolation<TelegramUser>> constraintViolations =
+                validator.validate(user);
+
+        assertEquals(0, constraintViolations.size());
+    }
+
+    static TelegramUser getValidTelegramUser() {
         TelegramUser user = new TelegramUser();
         user.id = 10903L;
         user.firstName = "test";
         user.isBot = false;
         user.userName = "testing";
-        Set<ConstraintViolation<TelegramUser>> constraintViolations =
-                validator.validate(user);
-
-        assertEquals(0, constraintViolations.size());
+        return user;
     }
 }

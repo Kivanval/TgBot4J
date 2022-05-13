@@ -3,6 +3,10 @@ package com.kivanval.telegram.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.Hibernate;
 
@@ -10,6 +14,9 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@Getter
+@Setter
+@ToString
 public class ListedNumberKey implements Serializable {
 
     @Column(name = "list_id")
@@ -32,29 +39,5 @@ public class ListedNumberKey implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(listId, userId);
-    }
-
-    public @NotNull Long getListId() {
-        return this.listId;
-    }
-
-    public @NotNull Long getUserId() {
-        return this.userId;
-    }
-
-    public void setListId(@NotNull Long listId) {
-        this.listId = listId;
-    }
-
-    public void setUserId(@NotNull Long userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("listId", listId)
-                .append("userId", userId)
-                .toString();
     }
 }

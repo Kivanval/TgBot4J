@@ -73,9 +73,9 @@ class TelegramListTest {
 
     @ParameterizedTest
     @NullSource
-    public void isFreezeIsNull(Boolean isFreeze) {
+    public void stateIsNull(TelegramList.State state) {
         TelegramList list = getValidTelegramList();
-        list.isFreeze = isFreeze;
+        list.state = state;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
@@ -161,19 +161,14 @@ class TelegramListTest {
         assertEquals(0, constraintViolations.size());
     }
 
-    private static TelegramList getValidTelegramList() {
+    static TelegramList getValidTelegramList() {
         TelegramList list = new TelegramList();
         list.id = 10903L;
         list.accessKey = "helloworld";
-        list.isFreeze = false;
+        list.state = TelegramList.State.ACTIVE;
         list.maxSize = 10903;
         list.startDate = LocalDateTime.MIN;
-        TelegramUser user = new TelegramUser();
-        user.id = 10903L;
-        user.firstName = "test";
-        user.isBot = false;
-        user.userName = "testing";
-        list.admin = user;
+        list.admin = TelegramUserTest.getValidTelegramUser();
         return list;
     }
 

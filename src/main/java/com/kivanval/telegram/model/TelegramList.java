@@ -4,17 +4,24 @@ package com.kivanval.telegram.model;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "LISTS")
-public class TelegramList {
+@Getter
+@Setter
+@ToString
+public class TelegramList implements Serializable {
+    public enum State {
+        ACTIVE, FREEZE, DELETED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,13 +34,14 @@ public class TelegramList {
     protected String accessKey;
 
     @Lob
-    @Column(name = "alias", nullable = false, unique = true)
+    @Column(name = "alias", unique = true)
     @Size(min = 1)
     protected String alias;
 
-    @Column(name = "is_freeze", nullable = false)
+    @Enumerated
+    @Column(name = "state", nullable = false)
     @NotNull
-    protected Boolean isFreeze;
+    protected State state;
 
     @Column(name = "max_size")
     @Positive
@@ -55,10 +63,15 @@ public class TelegramList {
     protected TelegramUser admin;
 
     @OneToMany(mappedBy = "list", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    protected Set<ListedNumber> listedNumbers = new HashSet<>();
+    @OrderBy(value = "number")
+    @NotNull
+    @ToString.Exclude
+    protected List<@Valid ListedNumber> listedNumbers = new ArrayList<>();
 
     @ManyToMany(mappedBy = "managedLists", fetch = FetchType.LAZY)
-    protected Set<TelegramUser> managers = new HashSet<>();
+    @NotNull
+    @ToString.Exclude
+    protected Set<@Valid TelegramUser> managers = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -71,100 +84,6 @@ public class TelegramList {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public @NotNull Long getId() {
-        return this.id;
-    }
-
-    public @Pattern(regexp = "\\w{10}") String getAccessKey() {
-        return this.accessKey;
-    }
-
-    public @Size(min = 1) String getAlias() {
-        return this.alias;
-    }
-
-    public @NotNull Boolean getIsFreeze() {
-        return this.isFreeze;
-    }
-
-    public @Positive Integer getMaxSize() {
-        return this.maxSize;
-    }
-
-    public @PastOrPresent @NotNull LocalDateTime getStartDate() {
-        return this.startDate;
-    }
-
-    public @Future LocalDateTime getEndDate() {
-        return this.endDate;
-    }
-
-    public @NotNull TelegramUser getAdmin() {
-        return this.admin;
-    }
-
-    public Set<ListedNumber> getListedNumbers() {
-        return this.listedNumbers;
-    }
-
-    public Set<TelegramUser> getManagers() {
-        return this.managers;
-    }
-
-    public void setId(@NotNull Long id) {
-        this.id = id;
-    }
-
-    public void setAccessKey(@Pattern(regexp = "\\w{10}") String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public void setAlias(@Size(min = 1) String alias) {
-        this.alias = alias;
-    }
-
-    public void setIsFreeze(@NotNull Boolean isFreeze) {
-        this.isFreeze = isFreeze;
-    }
-
-    public void setMaxSize(@Positive Integer maxSize) {
-        this.maxSize = maxSize;
-    }
-
-    public void setStartDate(@PastOrPresent @NotNull LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(@Future LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setAdmin(@NotNull TelegramUser admin) {
-        this.admin = admin;
-    }
-
-    public void setListedNumbers(Set<ListedNumber> listedNumbers) {
-        this.listedNumbers = listedNumbers;
-    }
-
-    public void setManagers(Set<TelegramUser> managers) {
-        this.managers = managers;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("accessKey", accessKey)
-                .append("name", alias)
-                .append("isFreeze", isFreeze)
-                .append("maxSize", maxSize)
-                .append("startDate", startDate)
-                .append("endDate", endDate)
-                .append("admin", admin)
-                .toString();
     }
 
 }

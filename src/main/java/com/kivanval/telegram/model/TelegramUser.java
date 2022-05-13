@@ -1,19 +1,25 @@
 package com.kivanval.telegram.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.telegram.telegrambots.meta.api.objects.User;
 
+import java.io.Serializable;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
-public class TelegramUser {
+@Getter
+@Setter
+@ToString
+public class TelegramUser implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -26,6 +32,7 @@ public class TelegramUser {
     protected String firstName;
 
     @Column(name = "is_bot", nullable = false)
+    @NotNull
     protected Boolean isBot;
 
 
@@ -52,46 +59,34 @@ public class TelegramUser {
     protected Boolean supportInlineQueries;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    protected Set<ListedNumber> listedNumbers = new HashSet<>();
+    @ToString.Exclude
+    protected Set<@Valid ListedNumber> listedNumbers = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "MANAGERS_LISTS",
             joinColumns = @JoinColumn(name = "manager_id"),
             inverseJoinColumns = @JoinColumn(name = "list_id"))
-    protected Set<TelegramList> managedLists = new LinkedHashSet<>();
+    @NotNull
+    @ToString.Exclude
+    protected Set<@Valid TelegramList> managedLists = new HashSet<>();
 
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    protected Set<TelegramList> adminLists = new HashSet<>();
-
-    public TelegramUser() {
-    }
-
-    public TelegramUser(@NotNull Long id, @Size(min = 1, max = 255) String firstName, @NotNull Boolean isBot,
-                        @Size(max = 255) String lastName, @Pattern(regexp = "\\w{5,32}") String userName,
-                        @Size(min = 1, max = 255) String languageCode, Boolean canJoinGroups,
-                        Boolean canReadAllGroupMessages, Boolean supportInlineQueries) {
-        this.id = id;
-        this.firstName = firstName;
-        this.isBot = isBot;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.languageCode = languageCode;
-        this.canJoinGroups = canJoinGroups;
-        this.canReadAllGroupMessages = canReadAllGroupMessages;
-        this.supportInlineQueries = supportInlineQueries;
-    }
+    @NotNull
+    @ToString.Exclude
+    protected Set<@Valid TelegramList> adminLists = new HashSet<>();
 
     public static TelegramUser from(@NotNull User user) {
-        Long id = user.getId();
-        String firstName = user.getFirstName();
-        Boolean isBot = user.getIsBot();
-        String lastName = user.getLastName();
-        String userName = user.getUserName();
-        String languageCode = user.getLanguageCode();
-        Boolean canJoinGroups = user.getCanJoinGroups();
-        Boolean canReadAllGroupMessages = user.getCanReadAllGroupMessages();
-        Boolean supportInlineQueries = user.getSupportInlineQueries();
-        return new TelegramUser(id, firstName, isBot, lastName, userName, languageCode, canJoinGroups, canReadAllGroupMessages, supportInlineQueries);
+        TelegramUser telegramUser = new TelegramUser();
+        telegramUser.id = user.getId();
+        telegramUser.firstName = user.getFirstName();
+        telegramUser.isBot = user.getIsBot();
+        telegramUser.lastName = user.getLastName();
+        telegramUser.userName = user.getUserName();
+        telegramUser.languageCode = user.getLanguageCode();
+        telegramUser.canJoinGroups = user.getCanJoinGroups();
+        telegramUser.canReadAllGroupMessages = user.getCanReadAllGroupMessages();
+        telegramUser.supportInlineQueries = user.getSupportInlineQueries();
+        return telegramUser;
     }
 
 
@@ -100,114 +95,4 @@ public class TelegramUser {
         return getClass().hashCode();
     }
 
-    public @NotNull Long getId() {
-        return this.id;
-    }
-
-    public @Size(min = 1, max = 255) String getFirstName() {
-        return this.firstName;
-    }
-
-    public @NotNull Boolean getIsBot() {
-        return this.isBot;
-    }
-
-    public @Size(max = 255) String getLastName() {
-        return this.lastName;
-    }
-
-    public @Pattern(regexp = "\\w{5,32}") String getUserName() {
-        return this.userName;
-    }
-
-    public @Size(min = 1, max = 255) String getLanguageCode() {
-        return this.languageCode;
-    }
-
-    public Boolean getCanJoinGroups() {
-        return this.canJoinGroups;
-    }
-
-    public Boolean getCanReadAllGroupMessages() {
-        return this.canReadAllGroupMessages;
-    }
-
-    public Boolean getSupportInlineQueries() {
-        return this.supportInlineQueries;
-    }
-
-    public Set<ListedNumber> getListedNumbers() {
-        return this.listedNumbers;
-    }
-
-    public Set<TelegramList> getManagedLists() {
-        return this.managedLists;
-    }
-
-    public Set<TelegramList> getAdminLists() {
-        return this.adminLists;
-    }
-
-    public void setId(@NotNull Long id) {
-        this.id = id;
-    }
-
-    public void setFirstName(@Size(min = 1, max = 255) String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setIsBot(@NotNull Boolean isBot) {
-        this.isBot = isBot;
-    }
-
-    public void setLastName(@Size(max = 255) String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setUserName(@Pattern(regexp = "\\w{5,32}") String userName) {
-        this.userName = userName;
-    }
-
-    public void setLanguageCode(@Size(min = 1, max = 255) String languageCode) {
-        this.languageCode = languageCode;
-    }
-
-    public void setCanJoinGroups(Boolean canJoinGroups) {
-        this.canJoinGroups = canJoinGroups;
-    }
-
-    public void setCanReadAllGroupMessages(Boolean canReadAllGroupMessages) {
-        this.canReadAllGroupMessages = canReadAllGroupMessages;
-    }
-
-    public void setSupportInlineQueries(Boolean supportInlineQueries) {
-        this.supportInlineQueries = supportInlineQueries;
-    }
-
-    public void setListedNumbers(Set<ListedNumber> listedNumbers) {
-        this.listedNumbers = listedNumbers;
-    }
-
-    public void setManagedLists(Set<TelegramList> managedLists) {
-        this.managedLists = managedLists;
-    }
-
-    public void setAdminLists(Set<TelegramList> adminLists) {
-        this.adminLists = adminLists;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("firstName", firstName)
-                .append("isBot", isBot)
-                .append("lastName", lastName)
-                .append("userName", userName)
-                .append("languageCode", languageCode)
-                .append("canJoinGroups", canJoinGroups)
-                .append("canReadAllGroupMessages", canReadAllGroupMessages)
-                .append("supportInlineQueries", supportInlineQueries)
-                .toString();
-    }
 }
