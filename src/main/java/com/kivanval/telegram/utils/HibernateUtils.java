@@ -1,4 +1,4 @@
-package com.kivanval.telegram.data.utils;
+package com.kivanval.telegram.utils;
 
 import com.kivanval.telegram.models.ListedPlace;
 import com.kivanval.telegram.models.ListedPlaceKey;

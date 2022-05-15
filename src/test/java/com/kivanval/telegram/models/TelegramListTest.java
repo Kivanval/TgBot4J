@@ -48,16 +48,15 @@ class TelegramListTest {
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"test", "testtesttest", "he!!oworld"})
-    public void accessKeyNotPattern(String accessKey) {
+    @Test
+    public void accessKeyTooShort() {
         TelegramList list = getValidTelegramList();
-        list.accessKey = accessKey;
+        list.accessKey = "";
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("must match \"\\w{10}\"", constraintViolations.iterator().next().getMessage());
+        assertEquals("size must be between 1 and 255", constraintViolations.iterator().next().getMessage());
     }
 
     @Test

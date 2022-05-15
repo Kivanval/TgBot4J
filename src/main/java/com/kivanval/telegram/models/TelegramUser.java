@@ -1,5 +1,6 @@
 package com.kivanval.telegram.models;
 
+import com.kivanval.telegram.utils.TelegramUserUtils;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -8,10 +9,13 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -83,7 +87,7 @@ public class TelegramUser implements Serializable {
             cascade = {CascadeType.ALL}
     )
     @JoinTable(
-            name = "MANAGERS_LISTS",
+            name = "LISTS_MANAGERS",
             joinColumns = @JoinColumn(
                     name = "manager_id",
                     referencedColumnName = "id",
@@ -94,7 +98,7 @@ public class TelegramUser implements Serializable {
                     name = "list_id",
                     referencedColumnName = "id",
                     nullable = false,
-                    foreignKey = @ForeignKey(name = "managers_lists_list_id_fkey")
+                    foreignKey = @ForeignKey(name = "managers_lists_user_id_fkey")
             )
     )
     @NotNull
@@ -124,10 +128,16 @@ public class TelegramUser implements Serializable {
         return telegramUser;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        TelegramUser that = (TelegramUser) o;
+        return id != null && Objects.equals(id, that.id);
+    }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }
