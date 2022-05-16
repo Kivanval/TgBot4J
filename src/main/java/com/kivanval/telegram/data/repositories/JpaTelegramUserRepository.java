@@ -1,8 +1,8 @@
 package com.kivanval.telegram.data.repositories;
 
-import com.kivanval.telegram.data.dao.HibernateTelegramUserDao;
+import com.kivanval.telegram.data.dao.JpaTelegramUserDao;
 
-public record JpaTelegramUserRepository(HibernateTelegramUserDao dao) implements AutoCloseable {
+public record JpaTelegramUserRepository(JpaTelegramUserDao dao) implements AutoCloseable {
 
 
 

@@ -36,7 +36,6 @@ public class TelegramList implements Serializable {
     @NotNull
     protected Long id;
 
-    @org.hibernate.annotations.NaturalId
     @Column(name = "alias", unique = true)
     @Size(
             min = 1,
@@ -98,14 +97,13 @@ public class TelegramList implements Serializable {
 
     public TelegramList addManager(TelegramUser manager) {
         if (Objects.equals(manager, null))
-            throw new NullPointerException("Can't add null session");
+            throw new NullPointerException("Can't add null entityManager");
         if (Objects.equals(creator, manager))
-            throw new IllegalStateException("%s is an admin of this list"
+            throw new IllegalStateException("%s is an creator of this list"
                     .formatted(TelegramUserUtils.getName(creator)));
         if (managers.contains(manager))
-            throw new IllegalStateException("%s is already a session of this list"
+            throw new IllegalStateException("%s is already a entityManager of this list"
                     .formatted(TelegramUserUtils.getName(manager)));
-
         getManagers().add(manager);
         return this;
     }
