@@ -1,8 +1,6 @@
 package com.kivanval.telegram.models;
 
-import com.kivanval.telegram.utils.TelegramUserUtils;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -13,10 +11,7 @@ import org.hibernate.Hibernate;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(
@@ -73,46 +68,6 @@ public class TelegramUser implements Serializable {
 
     @Column(name = "supports_inline_queries")
     protected Boolean supportInlineQueries;
-
-    @OneToMany(
-            mappedBy = "user",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL}
-    )
-    @ToString.Exclude
-    protected Set<@Valid ListedPlace> listedPlaces = new HashSet<>();
-
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL}
-    )
-    @JoinTable(
-            name = "LISTS_MANAGERS",
-            joinColumns = @JoinColumn(
-                    name = "manager_id",
-                    referencedColumnName = "id",
-                    nullable = false,
-                    foreignKey = @ForeignKey(name = "managers_lists_user_id_fkey")
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "list_id",
-                    referencedColumnName = "id",
-                    nullable = false,
-                    foreignKey = @ForeignKey(name = "managers_lists_user_id_fkey")
-            )
-    )
-    @NotNull
-    @ToString.Exclude
-    protected Set<@Valid TelegramList> managedLists = new HashSet<>();
-
-    @OneToMany(
-            mappedBy = "admin",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL}
-    )
-    @NotNull
-    @ToString.Exclude
-    protected Set<@Valid TelegramList> adminLists = new HashSet<>();
 
     public static TelegramUser from(@NotNull User user) {
         TelegramUser telegramUser = new TelegramUser();

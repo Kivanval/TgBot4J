@@ -27,7 +27,7 @@ class TelegramUserTest {
 
     @ParameterizedTest
     @NullSource
-    public void idIsNull(Long id) {
+    void idIsNull(Long id) {
         TelegramUser user = getValidTelegramUser();
         user.id = id;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
@@ -39,7 +39,7 @@ class TelegramUserTest {
 
     @ParameterizedTest
     @NullSource
-    public void firstNameIsNull(String firstName) {
+    void firstNameIsNull(String firstName) {
         TelegramUser user = getValidTelegramUser();
         user.firstName = firstName;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
@@ -50,7 +50,7 @@ class TelegramUserTest {
     }
 
     @Test
-    public void firstNameTooShort() {
+    void firstNameTooShort() {
         TelegramUser user = getValidTelegramUser();
         user.firstName = "";
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
@@ -62,7 +62,7 @@ class TelegramUserTest {
 
     @ParameterizedTest
     @NullSource
-    public void isBotIsNull(Boolean isBot) {
+    void isBotIsNull(Boolean isBot) {
         TelegramUser user = getValidTelegramUser();
         user.isBot = isBot;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
@@ -74,7 +74,7 @@ class TelegramUserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"test", "testTestTestTestTestTestTestTestT", "Тестування"})
-    public void userNameNotPatter(String userName) {
+    void userNameNotPatter(String userName) {
         TelegramUser user = getValidTelegramUser();
         user.userName = userName;
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
@@ -85,7 +85,7 @@ class TelegramUserTest {
     }
 
     @Test
-    public void userIsValid() {
+    void userIsValid() {
         TelegramUser user = getValidTelegramUser();
         Set<ConstraintViolation<TelegramUser>> constraintViolations =
                 validator.validate(user);

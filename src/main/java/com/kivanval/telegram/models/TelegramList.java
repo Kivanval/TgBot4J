@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.NaturalId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,9 +18,6 @@ import java.util.*;
 @Table(
         name = "LISTS",
         uniqueConstraints = {
-                @UniqueConstraint(
-                        columnNames = {"access_key"},
-                        name = "lists_access_key_uq"),
                 @UniqueConstraint(
                         columnNames = {"alias"},
                         name = "lists_alias_uq")
@@ -41,16 +37,7 @@ public class TelegramList implements Serializable {
     protected Long id;
 
     @org.hibernate.annotations.NaturalId
-    @Column(name = "access_key", nullable = false)
-    @Size(
-            min = 1,
-            max = 255
-    )
-    @NotNull
-    protected String accessKey;
-
-    @org.hibernate.annotations.NaturalId
-    @Column(name = "alias")
+    @Column(name = "alias", unique = true)
     @Size(
             min = 1,
             max = 255
@@ -77,23 +64,14 @@ public class TelegramList implements Serializable {
 
     @ManyToOne
     @JoinColumn(
-            name = "admin_id",
+            name = "creator_id",
             referencedColumnName = "id",
             nullable = false,
             foreignKey = @ForeignKey(name = "lists_user_id_fkey")
     )
     @Valid
     @NotNull
-    protected TelegramUser admin;
-
-    @OneToMany(
-            mappedBy = "list",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL})
-    @OrderBy("placeNumber")
-    @NotNull
-    @ToString.Exclude
-    protected List<@Valid ListedPlace> listedPlaces = new ArrayList<>();
+    protected TelegramUser creator;
 
     @ManyToMany(
             fetch = FetchType.LAZY,
@@ -116,15 +94,14 @@ public class TelegramList implements Serializable {
     )
     @NotNull
     @ToString.Exclude
-    protected Set<@Valid TelegramUser> managers = new HashSet<>();
+    private Set<@Valid TelegramUser> managers = new HashSet<>();
 
     public TelegramList addManager(TelegramUser manager) {
         if (Objects.equals(manager, null))
             throw new NullPointerException("Can't add null session");
-        TelegramUser admin = getAdmin();
-        if (Objects.equals(admin, manager))
+        if (Objects.equals(creator, manager))
             throw new IllegalStateException("%s is an admin of this list"
-                    .formatted(TelegramUserUtils.getName(admin)));
+                    .formatted(TelegramUserUtils.getName(creator)));
         if (managers.contains(manager))
             throw new IllegalStateException("%s is already a session of this list"
                     .formatted(TelegramUserUtils.getName(manager)));

@@ -25,7 +25,7 @@ class ListedPlaceKeyTest {
 
     @ParameterizedTest
     @NullSource
-    public void listIdIsNull(Long listId) {
+    void listIdIsNull(Long listId) {
         ListedPlaceKey key = getValidListedNumberKey();
         key.listId = listId;
         Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
@@ -37,7 +37,7 @@ class ListedPlaceKeyTest {
 
     @ParameterizedTest
     @NullSource
-    public void userIdIsNull(Long userId) {
+    void userIdIsNull(Long userId) {
         ListedPlaceKey key = getValidListedNumberKey();
         key.userId = userId;
         Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
@@ -48,7 +48,7 @@ class ListedPlaceKeyTest {
     }
 
     @Test
-    public void listedNumberKeyIsValid() {
+    void listedNumberKeyIsValid() {
         ListedPlaceKey key = getValidListedNumberKey();
         Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
                 validator.validate(key);

@@ -26,7 +26,7 @@ class ListedPlaceTest {
 
     @ParameterizedTest
     @NullSource
-    public void keyIsNull(ListedPlaceKey key) {
+    void keyIsNull(ListedPlaceKey key) {
         ListedPlace place = getValidListedNumber();
         place.id = key;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -37,7 +37,7 @@ class ListedPlaceTest {
     }
 
     @Test
-    public void keyNotValid() {
+    void keyNotValid() {
         ListedPlace place = getValidListedNumber();
         place.id.listId = null;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -48,7 +48,7 @@ class ListedPlaceTest {
     }
 
     @Test
-    public void listNotValid() {
+    void listNotValid() {
         ListedPlace place = getValidListedNumber();
         place.list.id = null;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -59,7 +59,7 @@ class ListedPlaceTest {
     }
 
     @Test
-    public void userNotValid() {
+    void userNotValid() {
         ListedPlace place = getValidListedNumber();
         place.user.id = null;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -70,7 +70,7 @@ class ListedPlaceTest {
     }
 
     @Test
-    public void stateInNull() {
+    void stateInNull() {
         ListedPlace place = getValidListedNumber();
         place.state = null;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -82,7 +82,7 @@ class ListedPlaceTest {
 
 
     @Test
-    public void entryDateIsNull() {
+    void entryDateIsNull() {
         ListedPlace place = getValidListedNumber();
         place.entryDate = null;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -93,7 +93,7 @@ class ListedPlaceTest {
     }
 
     @Test
-    public void entryDateInTheFuture() {
+    void entryDateInTheFuture() {
         ListedPlace place = getValidListedNumber();
         place.entryDate = LocalDateTime.MAX;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -104,7 +104,7 @@ class ListedPlaceTest {
     }
 
     @Test
-    public void numberIsNull() {
+    void numberIsNull() {
         ListedPlace place = getValidListedNumber();
         place.placeNumber = null;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -115,7 +115,7 @@ class ListedPlaceTest {
     }
 
     @Test
-    public void numberLessThanZero() {
+    void numberLessThanZero() {
         ListedPlace place = getValidListedNumber();
         place.placeNumber = 0;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =

@@ -2,8 +2,6 @@ package com.kivanval.telegram.data.dao;
 
 import com.kivanval.telegram.models.ListedPlace;
 import com.kivanval.telegram.models.ListedPlaceKey;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

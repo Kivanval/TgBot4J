@@ -1,6 +1,6 @@
 package com.kivanval.telegram.abilities;
 
-import com.kivanval.telegram.constants.AbilityConstants;
+import com.kivanval.telegram.constants.AbilityConstant;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.Privacy;
@@ -11,8 +11,8 @@ public class StartAbility implements AbilityExtension {
 
     public Ability replyToStart() {
         return Ability.builder()
-                .name(AbilityConstants.START)
-                .info(AbilityConstants.START_DESCRIPTION)
+                .name(AbilityConstant.START)
+                .info(AbilityConstant.START_DESCRIPTION)
                 .privacy(Privacy.PUBLIC)
                 .locality(Locality.USER)
                 .action(ctx -> ctx.bot().silent()
@@ -20,7 +20,7 @@ public class StartAbility implements AbilityExtension {
                                 .disableWebPagePreview(true)
                                 .parseMode("Markdown")
                                 .chatId(String.valueOf(ctx.chatId()))
-                                .text(AbilityConstants.START_REPLY)
+                                .text(AbilityConstant.START_REPLY)
                                 .build()
                         )
                 )

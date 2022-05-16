@@ -1,6 +1,6 @@
 package com.kivanval.telegram.abilities;
 
-import com.kivanval.telegram.constants.AbilityConstants;
+import com.kivanval.telegram.constants.AbilityConstant;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.Privacy;
@@ -11,8 +11,8 @@ public class HelpAbility implements AbilityExtension {
 
     public Ability replyToHelp() {
         return Ability.builder()
-                .name(AbilityConstants.HELP)
-                .info(AbilityConstants.HELP_DESCRIPTION)
+                .name(AbilityConstant.HELP)
+                .info(AbilityConstant.HELP_DESCRIPTION)
                 .privacy(Privacy.PUBLIC)
                 .locality(Locality.ALL)
                 .action(ctx -> ctx.bot().silent()
@@ -20,7 +20,7 @@ public class HelpAbility implements AbilityExtension {
                                 .disableWebPagePreview(true)
                                 .parseMode("Markdown")
                                 .chatId(String.valueOf(ctx.chatId()))
-                                .text(AbilityConstants.HELP_REPLY)
+                                .text(AbilityConstant.HELP_REPLY)
                                 .build()
                         )
                 )

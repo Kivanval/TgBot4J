@@ -1,9 +1,6 @@
 package com.kivanval.telegram.data.dao;
 
 import com.kivanval.telegram.models.TelegramList;
-import com.kivanval.telegram.models.TelegramList_;
-import com.kivanval.telegram.models.TelegramUser;
-import com.kivanval.telegram.models.TelegramUser_;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.hibernate.Session;
@@ -21,40 +18,30 @@ public record HibernateTelegramListDao(Session session) implements Dao<TelegramL
                 .loadOptional(id);
     }
 
-    public Optional<TelegramList> readByAccessKey(String accessKey) {
-        return session.byNaturalId(TelegramList.class)
-                .using("accessKey", accessKey)
-                .loadOptional();
-    }
-
 
     public Optional<TelegramList> readByAlias(String alias) {
-        return session.byNaturalId(TelegramList.class)
-                .using("alias", alias)
-                .loadOptional();
+        return session.bySimpleNaturalId(TelegramList.class)
+                .loadOptional(alias);
     }
 
     public List<TelegramList> readByManagerId(Long managerId) {
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<TelegramList> cq = cb.createQuery(TelegramList.class);
-        Root<TelegramList> root = cq.from(TelegramList.class);
-        Join<TelegramList, TelegramUser> join = root.join(TelegramList_.managers);
-        Predicate p = cb.equal(join.get(TelegramUser_.id), managerId);
-        cq.where(p);
-        cq.select(root);
-        TypedQuery<TelegramList> query = session.createQuery(cq);
+        TypedQuery<TelegramList> query = session.createQuery("""
+                        SELECT l
+                            FROM TelegramList l
+                            JOIN l.managers m
+                            WHERE m.id = :managerId
+                        """, TelegramList.class)
+                .setParameter("managerId", managerId);
         return query.getResultList();
     }
 
-    public List<TelegramList> readByAdminId(Long adminId) {
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<TelegramList> cq = cb.createQuery(TelegramList.class);
-        Root<TelegramList> root = cq.from(TelegramList.class);
-        Join<TelegramList, TelegramUser> join = root.join(TelegramList_.admin);
-        Predicate p = cb.equal(join.get(TelegramUser_.id), adminId);
-        cq.where(p);
-        cq.select(root);
-        TypedQuery<TelegramList> query = session.createQuery(cq);
+    public List<TelegramList> readByAdminId(Long creatorId) {
+        TypedQuery<TelegramList> query = session.createQuery("""
+                        SELECT l
+                            FROM TelegramList l
+                            WHERE l.creator.id = :creatorId
+                        """, TelegramList.class)
+                .setParameter("creatorId", creatorId);
         return query.getResultList();
     }
 

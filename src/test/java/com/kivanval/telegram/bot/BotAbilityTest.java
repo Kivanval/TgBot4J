@@ -1,6 +1,6 @@
 package com.kivanval.telegram.bot;
 
-import com.kivanval.telegram.constants.AbilityConstants;
+import com.kivanval.telegram.constants.AbilityConstant;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -36,7 +36,7 @@ class BotAbilityTest {
 
     @ParameterizedTest
     @MethodSource("com.kivanval.telegram.bot.UpdatesArguments#provideUpdatesForCanReplyToGreeting")
-    public void canReplyToGreeting(Update update) {
+    void canReplyToGreeting(Update update) {
         assertNotNull(update);
         bot.onUpdateReceived(update);
 
@@ -44,7 +44,7 @@ class BotAbilityTest {
                 .execute(SendMessage.builder()
                         .chatId(String.valueOf(getChatId(update)))
                         .replyToMessageId(update.getMessage().getMessageId())
-                        .text(AbilityConstants.GREETING_REPLY)
+                        .text(AbilityConstant.GREETING_REPLY)
                         .build());
     }
 

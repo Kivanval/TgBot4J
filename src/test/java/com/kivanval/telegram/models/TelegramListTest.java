@@ -26,7 +26,7 @@ class TelegramListTest {
 
     @ParameterizedTest
     @NullSource
-    public void idIsNull(Long id) {
+    void idIsNull(Long id) {
         TelegramList list = getValidTelegramList();
         list.id = id;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -35,32 +35,8 @@ class TelegramListTest {
         assertEquals(1, constraintViolations.size());
         assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
     }
-
-    @ParameterizedTest
-    @NullSource
-    public void accessKeyIsNull(String accessKey) {
-        TelegramList list = getValidTelegramList();
-        list.accessKey = accessKey;
-        Set<ConstraintViolation<TelegramList>> constraintViolations =
-                validator.validate(list);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
     @Test
-    public void accessKeyTooShort() {
-        TelegramList list = getValidTelegramList();
-        list.accessKey = "";
-        Set<ConstraintViolation<TelegramList>> constraintViolations =
-                validator.validate(list);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("size must be between 1 and 255", constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void aliasTooShort() {
+    void aliasTooShort() {
         TelegramList list = getValidTelegramList();
         list.alias = "";
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -72,7 +48,7 @@ class TelegramListTest {
 
     @ParameterizedTest
     @NullSource
-    public void stateIsNull(TelegramList.State state) {
+    void stateIsNull(TelegramList.State state) {
         TelegramList list = getValidTelegramList();
         list.state = state;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -84,7 +60,7 @@ class TelegramListTest {
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0})
-    public void maxSizeLessThanZero(Integer maxSize) {
+    void maxSizeLessThanZero(Integer maxSize) {
         TelegramList list = getValidTelegramList();
         list.maxSize = maxSize;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -96,7 +72,7 @@ class TelegramListTest {
 
     @ParameterizedTest
     @NullSource
-    public void startDateInFuture(LocalDateTime startDate) {
+    void startDateInFuture(LocalDateTime startDate) {
         TelegramList list = getValidTelegramList();
         list.startDate = startDate;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -107,7 +83,7 @@ class TelegramListTest {
     }
 
     @Test
-    public void startDateInTheFuture() {
+    void startDateInTheFuture() {
         TelegramList list = getValidTelegramList();
         list.startDate = LocalDateTime.MAX;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -118,7 +94,7 @@ class TelegramListTest {
     }
 
     @Test
-    public void endDateInThePast() {
+    void endDateInThePast() {
         TelegramList list = getValidTelegramList();
         list.endDate = LocalDateTime.MIN;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
@@ -130,9 +106,9 @@ class TelegramListTest {
 
     @ParameterizedTest
     @NullSource
-    public void adminIsNull(TelegramUser user) {
+    void creatorIsNull(TelegramUser user) {
         TelegramList list = getValidTelegramList();
-        list.admin = user;
+        list.creator = user;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
@@ -141,9 +117,9 @@ class TelegramListTest {
     }
 
     @Test
-    public void adminIsNotValid() {
+    void creatorIsNotValid() {
         TelegramList list = getValidTelegramList();
-        list.admin.isBot = null;
+        list.creator.isBot = null;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
@@ -152,7 +128,7 @@ class TelegramListTest {
     }
 
     @Test
-    public void listIsValid() {
+    void listIsValid() {
         TelegramList list = getValidTelegramList();
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
@@ -163,11 +139,10 @@ class TelegramListTest {
     static TelegramList getValidTelegramList() {
         TelegramList list = new TelegramList();
         list.id = 10903L;
-        list.accessKey = "helloworld";
         list.state = TelegramList.State.ACTIVE;
         list.maxSize = 10903;
         list.startDate = LocalDateTime.MIN;
-        list.admin = TelegramUserTest.getValidTelegramUser();
+        list.creator = TelegramUserTest.getValidTelegramUser();
         return list;
     }
 
