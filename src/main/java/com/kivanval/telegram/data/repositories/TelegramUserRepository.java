@@ -2,9 +2,15 @@ package com.kivanval.telegram.data.repositories;
 
 import com.kivanval.telegram.models.TelegramUser;
 
-public interface TelegramUserRepository {
-    TelegramUser get(Long id);
-    void add(TelegramUser user);
-    void update(TelegramUser user);
-    void remove(TelegramUser user);
+import java.util.List;
+import java.util.Optional;
+
+public interface TelegramUserRepository extends Repository<TelegramUser, Long> {
+    Optional<TelegramUser> getByUserName(String userName);
+
+    List<TelegramUser> getManagersByListId(Long listId);
+
+    Optional<TelegramUser> getCreatorByListId(Long listId);
+
+    List<TelegramUser> getUsersByListId(Long listId);
 }

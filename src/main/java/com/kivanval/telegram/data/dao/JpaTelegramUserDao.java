@@ -83,7 +83,7 @@ public record JpaTelegramUserDao(EntityManager entityManager) implements Telegra
     }
 
     @Override
-    public void delete(TelegramUser entity) {
+    public void remove(TelegramUser entity) {
         executeInsideTransaction(em -> em.remove(entity));
     }
 

@@ -36,7 +36,7 @@ public class TelegramList implements Serializable {
     @NotNull
     protected Long id;
 
-    @Column(name = "alias", unique = true)
+    @Column(name = "alias")
     @Size(
             min = 1,
             max = 255
@@ -74,7 +74,7 @@ public class TelegramList implements Serializable {
 
     @ManyToMany(
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL}
+            cascade = CascadeType.ALL
     )
     @JoinTable(
             name = "LISTS_MANAGERS",

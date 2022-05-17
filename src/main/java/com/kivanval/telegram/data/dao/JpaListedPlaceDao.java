@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public record JpaListedPlaceDao(EntityManager entityManager) implements Dao<ListedPlace, ListedPlaceKey> {
+public record JpaListedPlaceDao(EntityManager entityManager) implements ListedPlaceDao {
 
     @Override
     public Optional<ListedPlace> readById(ListedPlaceKey id) {
@@ -27,26 +27,30 @@ public record JpaListedPlaceDao(EntityManager entityManager) implements Dao<List
         return query.getResultList();
     }
 
-    public List<ListedPlace> readByUserId() {
+    public List<ListedPlace> readByUserId(Long userId) {
         TypedQuery<ListedPlace> query = entityManager.createQuery("""
-                SELECT p
-                    FROM ListedPlace p
-                """, ListedPlace.class);
+                        SELECT p
+                            FROM ListedPlace p
+                            WHERE p.user.id = :userId
+                        """, ListedPlace.class)
+                .setParameter("userId", userId);
         return query.getResultList();
     }
 
-    public List<ListedPlace> readByListId() {
+    public List<ListedPlace> readByListId(Long listId) {
         TypedQuery<ListedPlace> query = entityManager.createQuery("""
-                SELECT p
-                    FROM ListedPlace p
-                """, ListedPlace.class);
+                        SELECT p
+                            FROM ListedPlace p
+                            WHERE p.list.id = :listId
+                        """, ListedPlace.class)
+                .setParameter("listId", listId);
         return query.getResultList();
     }
 
     @Override
     public void create(ListedPlace entity) {
         executeInsideTransaction(em -> {
-            TypedQuery<Integer> query = entityManager.createQuery("""
+            TypedQuery<Integer> query = em.createQuery("""
                             SELECT MAX(p.placeNumber)
                                 FROM ListedPlace p
                                 WHERE p.list = :list
@@ -66,7 +70,7 @@ public record JpaListedPlaceDao(EntityManager entityManager) implements Dao<List
     }
 
     @Override
-    public void delete(ListedPlace entity) {
+    public void remove(ListedPlace entity) {
         executeInsideTransaction(em -> em.remove(entity));
     }
 
@@ -83,7 +87,7 @@ public record JpaListedPlaceDao(EntityManager entityManager) implements Dao<List
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         entityManager.close();
     }
 }
