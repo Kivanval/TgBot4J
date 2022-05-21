@@ -19,7 +19,7 @@ public class HelpAbility implements AbilityExtension {
                 .action(ctx -> ctx.bot().silent()
                         .execute(SendMessage.builder()
                                 .disableWebPagePreview(true)
-                                .parseMode("Markdown")
+                                .parseMode("HTML")
                                 .chatId(String.valueOf(ctx.chatId()))
                                 .text(AbilityConstant.HELP_REPLY)
                                 .build()

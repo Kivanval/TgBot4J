@@ -12,6 +12,7 @@ import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Entity
@@ -46,7 +47,7 @@ public class TelegramList implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     @NotNull
-    protected State state;
+    protected State state = State.ACTIVE;
 
     @Column(name = "max_size")
     @Positive
@@ -55,13 +56,15 @@ public class TelegramList implements Serializable {
     @Column(name = "start_date", nullable = false)
     @PastOrPresent
     @NotNull
-    protected LocalDateTime startDate;
+    protected LocalDateTime startDate = LocalDateTime.now();
 
     @Column(name = "end_date")
     @Future
     protected LocalDateTime endDate;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(
+            fetch = FetchType.EAGER,
+            cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(
             name = "creator_id",
             referencedColumnName = "id",

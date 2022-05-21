@@ -12,9 +12,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
 public class GreetingAbility implements AbilityExtension {
+
+    public static final String GREETING_REPLY = parseToUnicode("Героям слава! :heart::ua:");
 
     public Reply replyToGreeting() {
         BiConsumer<BaseAbilityBot, Update> action = (bot, upd) -> bot.silent()

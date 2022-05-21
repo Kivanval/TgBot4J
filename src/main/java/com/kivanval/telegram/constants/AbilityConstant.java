@@ -18,22 +18,15 @@ public final class AbilityConstant {
 
     public static final String CREATE = "create";
 
-    public static final String CREATE_DESCRIPTION = "create new list";
+    public static final String CREATE_DESCRIPTION = "create new list with an alias <b>[optional]</b>";
 
     public static final String CREATE_REPLY = parseToUnicode("""
-            Great, then I suggest you set the initial settings for the bot.
-            Would you like to?""");
+           All right! Let's give your list an alias.
+           If you don't want to do this yet, just write <b>/empty.</b>""");
 
-    public static final String CREATE_NO_BUTTON = "No";
-    public static final String CREATE_YES_BUTTON = "Yes";
-    public static final String CREATE_REPLY_NO = parseToUnicode("""
-            OK, then I create a standard list,
-            but you can always edit it with manipulation commands if you want!""");
+    public static final String MY_LISTS = "mylists";
 
-    public static final String CREATE_REPLY_YES = parseToUnicode("""
-            Hello, dear user! :blush:
-            I will help you create and manage your own lists.
-            Use command */help* to find out the bot's functionality! :wink:""");
+    public static final String MY_LISTS_DESCRIPTION = "show existing queues created";
 
     public static final String HELP = "help";
     public static final String HELP_DESCRIPTION = "gives out a help message with command descriptions";
@@ -44,11 +37,13 @@ public final class AbilityConstant {
                     
             You can control me by sending these commands:
                         
-            *Common Commands*
+            <b>Common Commands</b>
             /%s - %s
             /%s - %s
                         
-            *Manage lists*
-            ---
-            """).formatted(START, START_DESCRIPTION, HELP, HELP_DESCRIPTION);
+            <b>Manage lists</b>
+            %s - %s
+            %s - %s
+            """).formatted(START, START_DESCRIPTION, HELP, HELP_DESCRIPTION,
+            CREATE, CREATE_DESCRIPTION, MY_LISTS, MY_LISTS_DESCRIPTION);
 }

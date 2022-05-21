@@ -1,5 +1,6 @@
 package com.kivanval.telegram.bot;
 
+import com.kivanval.telegram.abilities.GreetingAbility;
 import com.kivanval.telegram.constants.AbilityConstant;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.db.MapDBContext;
+import org.telegram.abilitybots.api.db.Var;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -24,6 +26,8 @@ class BotAbilityTest {
     @BeforeAll
     static public void setUpBot() {
         DBContext db = MapDBContext.offlineInstance("test");
+        Var<Integer> id = db.getVar("ReplyFlowId");
+        id.set(0);
         bot = new TelegramBot(db);
         bot.onRegister();
     }
@@ -44,7 +48,7 @@ class BotAbilityTest {
                 .execute(SendMessage.builder()
                         .chatId(String.valueOf(getChatId(update)))
                         .replyToMessageId(update.getMessage().getMessageId())
-                        .text(AbilityConstant.GREETING_REPLY)
+                        .text(GreetingAbility.GREETING_REPLY)
                         .build());
     }
 

@@ -1,5 +1,6 @@
 package com.kivanval.telegram.abilities;
 
+import com.kivanval.telegram.bot.TelegramBot;
 import com.kivanval.telegram.constants.AbilityConstant;
 import com.kivanval.telegram.data.repositories.TelegramListRepository;
 import com.kivanval.telegram.data.repositories.TelegramUserRepository;
@@ -21,8 +22,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
@@ -32,54 +33,71 @@ import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 @Getter
 @Setter
 public class CreateAbility implements AbilityExtension {
-    private DBContext db;
+    private TelegramBot bot;
 
-    private TelegramUserRepository userRepository;
+    public static final String REPLY_GET_ALIAS = """
+            OK, the list has been created!
+            You can see it on <b>/mylists</b>""";
 
-    private TelegramListRepository listRepository;
+
+    public static final String EMPTY = "/empty";
 
     public ReplyFlow replyToCreate() {
-        final Var<Integer> id = db.getVar("ID");
-        Reply replyToNo = Reply.of((bot, upd) -> {
-            TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());
-            TelegramList list = new TelegramList();
-            list.setCreator(user);
-            list.setStartDate(LocalDateTime.now());
-            list.setState(TelegramList.State.FREEZE);
-            listRepository.update(list);
-            bot.silent().send(AbilityConstant.CREATE_REPLY_NO, getChatId(upd));
-        }, Flag.TEXT, hasMessageWith(AbilityConstant.CREATE_NO_BUTTON));
+        final Var<Integer> id = bot.db().getVar("ReplyFlowId");
 
+        Reply replyToGetAlias = Reply.of((baseAbilityBot, upd) -> {
+            TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());
+
+            String alias = upd.getMessage().getText();
+            alias = alias.equals(EMPTY) ? null : alias;
+
+            TelegramList list = new TelegramList();
+            list.setAlias(alias);
+            list.setCreator(user);
+
+            bot.getListRepository().update(list);
+
+            bot.silent().send(REPLY_GET_ALIAS, getChatId(upd));
+
+        }, Flag.TEXT, hasNotMessageWith("/" + AbilityConstant.CREATE), uniqueAlias());
 
         int value = id.get();
         id.set(value + 1);
-        return ReplyFlow.builder(db, value)
-                .action((bot, upd) -> bot.silent().execute(
+        return ReplyFlow.builder(bot.db(), value)
+                .action((baseAbilityBot, upd) -> bot.silent().execute(
                         SendMessage.builder()
+                                .disableWebPagePreview(true)
+                                .parseMode("HTML")
                                 .chatId(String.valueOf(getChatId(upd)))
                                 .text(AbilityConstant.CREATE_REPLY)
-                                .replyMarkup(getChoiceKeyboard())
                                 .build()
                 ))
                 .onlyIf(hasMessageWith("/" + AbilityConstant.CREATE))
-                .next(replyToNo)
-                .build();
-    }
-
-    private static ReplyKeyboardMarkup getChoiceKeyboard() {
-        return ReplyKeyboardMarkup.builder()
-                .resizeKeyboard(true)
-                .oneTimeKeyboard(true)
-                .keyboardRow(new KeyboardRow(Arrays.asList(
-                                KeyboardButton.builder().text(AbilityConstant.CREATE_YES_BUTTON).build(),
-                                KeyboardButton.builder().text(AbilityConstant.CREATE_NO_BUTTON).build())
-                        )
-                )
+                .next(replyToGetAlias)
                 .build();
     }
 
     private static Predicate<Update> hasMessageWith(String msg) {
-        return upd -> upd.getMessage().getText().equalsIgnoreCase(msg);
+        return Flag.TEXT.and(upd -> upd.getMessage().getText().equalsIgnoreCase(msg));
+    }
+
+    private static Predicate<Update> hasNotMessageWith(String msg) {
+        return Flag.TEXT.and(upd -> !upd.getMessage().getText().equalsIgnoreCase(msg));
+    }
+
+    public static final String REPLY_NO_UQ_ALIAS = "Sorry, that name is already taken. Try another one.";
+
+    private Predicate<Update> uniqueAlias() {
+        return upd -> {
+            if (upd.getMessage().getText().equals(EMPTY)) {
+                return true;
+            }
+            Optional<TelegramList> list = bot.getListRepository().getByAlias(upd.getMessage().getText());
+            if (list.isPresent()) {
+                bot.silent().send(REPLY_NO_UQ_ALIAS, getChatId(upd));
+            }
+            return list.isEmpty();
+        };
     }
 
 }

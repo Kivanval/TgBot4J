@@ -1,16 +1,15 @@
 package com.kivanval.telegram.bot;
 
-import com.kivanval.telegram.abilities.CreateAbility;
-import com.kivanval.telegram.abilities.GreetingAbility;
-import com.kivanval.telegram.abilities.HelpAbility;
-import com.kivanval.telegram.abilities.StartAbility;
+import com.kivanval.telegram.abilities.*;
 import com.kivanval.telegram.constants.BotConfigConstant;
 import com.kivanval.telegram.data.repositories.TelegramListRepository;
 import com.kivanval.telegram.data.repositories.TelegramUserRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.db.DBContext;
+import org.telegram.abilitybots.api.db.Var;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.objects.ReplyFlow;
 import org.telegram.abilitybots.api.sender.SilentSender;
@@ -36,6 +35,7 @@ public class TelegramBot extends AbilityBot {
 
     public TelegramBot(TelegramUserRepository userRepository, TelegramListRepository listRepository) {
         super(BotConfigConstant.BOT_TOKEN, BotConfigConstant.BOT_USERNAME);
+        this.db.getVar("ReplyFlowId").set(0);
         this.userRepository = userRepository;
         this.listRepository = listRepository;
     }
@@ -60,8 +60,12 @@ public class TelegramBot extends AbilityBot {
         return new GreetingAbility();
     }
 
-    public AbilityExtension replyToCrete() {
-        return new CreateAbility(db, userRepository, listRepository);
+    public AbilityExtension replyToCreate() {
+        return new CreateAbility(this);
+    }
+
+    public AbilityExtension replyToMyLists() {
+        return new MyListsAbility(this);
     }
 
     protected void setSilentSender(SilentSender silent) {
