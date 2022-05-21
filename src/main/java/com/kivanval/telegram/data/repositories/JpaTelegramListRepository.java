@@ -5,6 +5,8 @@ import com.kivanval.telegram.models.TelegramList;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public record JpaTelegramListRepository(JpaTelegramListDao dao) implements TelegramListRepository {
 
@@ -36,6 +38,13 @@ public record JpaTelegramListRepository(JpaTelegramListDao dao) implements Teleg
     @Override
     public List<TelegramList> getByCreatorId(Long creatorId) {
         return dao.readByCreatorId(creatorId);
+    }
+
+    @Override
+    public List<TelegramList> getExistingByCreatorId(Long creatorId) {
+        return dao.readByCreatorId(creatorId).stream()
+                .filter(Predicate.not(l -> l.getState().equals(TelegramList.State.DELETED)))
+                .toList();
     }
 
     @Override

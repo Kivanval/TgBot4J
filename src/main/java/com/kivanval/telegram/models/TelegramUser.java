@@ -107,6 +107,7 @@ public class TelegramUser implements Serializable {
             orphanRemoval = true
     )
     @NotNull
+    @ToString.Exclude
     private List<@Valid @NotNull ListedPlace> listedPlaces = new ArrayList<>();
 
     public static TelegramUser from(@NotNull User user) {

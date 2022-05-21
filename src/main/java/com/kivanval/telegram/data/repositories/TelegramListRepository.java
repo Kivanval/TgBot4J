@@ -13,4 +13,6 @@ public interface TelegramListRepository extends Repository<TelegramList, Long> {
     List<TelegramList> getByUserId(Long userId);
 
     List<TelegramList> getByCreatorId(Long creatorId);
+
+    List<TelegramList> getExistingByCreatorId(Long creatorId);
 }

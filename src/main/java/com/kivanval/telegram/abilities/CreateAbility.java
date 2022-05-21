@@ -18,11 +18,7 @@ import org.telegram.abilitybots.api.objects.ReplyFlow;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -37,7 +33,7 @@ public class CreateAbility implements AbilityExtension {
 
     public static final String REPLY_GET_ALIAS = """
             OK, the list has been created!
-            You can see it on <b>/mylists</b>""";
+            You can see it on <b>/mylists</b>.""";
 
 
     public static final String EMPTY = "/empty";
@@ -45,21 +41,32 @@ public class CreateAbility implements AbilityExtension {
     public ReplyFlow replyToCreate() {
         final Var<Integer> id = bot.db().getVar("ReplyFlowId");
 
-        Reply replyToGetAlias = Reply.of((baseAbilityBot, upd) -> {
-            TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());
+        Reply replyToGetAlias = Reply.of((abilityBot, upd) -> {
+                    TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());
 
-            String alias = upd.getMessage().getText();
-            alias = alias.equals(EMPTY) ? null : alias;
+                    String alias = upd.getMessage().getText();
+                    alias = alias.equals(EMPTY) ? null : alias;
 
-            TelegramList list = new TelegramList();
-            list.setAlias(alias);
-            list.setCreator(user);
+                    TelegramList list = new TelegramList();
+                    list.setAlias(alias);
+                    list.setCreator(user);
 
-            bot.getListRepository().update(list);
+                    bot.getListRepository().update(list);
 
-            bot.silent().send(REPLY_GET_ALIAS, getChatId(upd));
+                    bot.silent().execute(SendMessage.builder()
+                            .disableWebPagePreview(true)
+                            .parseMode("HTML")
+                            .chatId(String.valueOf(getChatId(upd)))
+                            .text(REPLY_GET_ALIAS)
+                            .build()
+                    );
 
-        }, Flag.TEXT, hasNotMessageWith("/" + AbilityConstant.CREATE), uniqueAlias());
+                },
+                Flag.TEXT,
+                Predicate.not(hasMessageWith("/" + AbilityConstant.CREATE)),
+                hasMessageValidateAlias(),
+                uniqueAlias()
+        );
 
         int value = id.get();
         id.set(value + 1);
@@ -81,17 +88,29 @@ public class CreateAbility implements AbilityExtension {
         return Flag.TEXT.and(upd -> upd.getMessage().getText().equalsIgnoreCase(msg));
     }
 
-    private static Predicate<Update> hasNotMessageWith(String msg) {
-        return Flag.TEXT.and(upd -> !upd.getMessage().getText().equalsIgnoreCase(msg));
+
+    public static final String REPLY_NO_VALIDATE_ALIAS = """
+            Sorry, this is an unacceptable alias.
+            Stick to the fact that it is no longer than 255 characters.""";
+
+    private Predicate<Update> hasMessageValidateAlias() {
+        return Flag.TEXT.and(upd -> {
+            String text = upd.getMessage().getText();
+            if (text.equals(EMPTY)) {
+                return true;
+            }
+            if (text.isEmpty() || text.length() > 255) {
+                bot.silent().send(REPLY_NO_VALIDATE_ALIAS, getChatId(upd));
+                return false;
+            }
+            return true;
+        });
     }
 
     public static final String REPLY_NO_UQ_ALIAS = "Sorry, that name is already taken. Try another one.";
 
     private Predicate<Update> uniqueAlias() {
         return upd -> {
-            if (upd.getMessage().getText().equals(EMPTY)) {
-                return true;
-            }
             Optional<TelegramList> list = bot.getListRepository().getByAlias(upd.getMessage().getText());
             if (list.isPresent()) {
                 bot.silent().send(REPLY_NO_UQ_ALIAS, getChatId(upd));

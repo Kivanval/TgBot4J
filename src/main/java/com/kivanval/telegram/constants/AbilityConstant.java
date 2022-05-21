@@ -14,7 +14,7 @@ public final class AbilityConstant {
     public static final String START_REPLY = parseToUnicode("""
             Hello, dear user! :blush:
             I will help you create and manage your own lists.
-            Use command */help* to find out the bot's functionality! :wink:""");
+            Use command <b>/help</b> to find out the bot's functionality! :wink:""");
 
     public static final String CREATE = "create";
 
@@ -33,17 +33,17 @@ public final class AbilityConstant {
 
     public static final String HELP_REPLY = parseToUnicode("""
             I can help you create and manage your own lists.
-            The [source code](https://github.com/Kivanval/TgBot4J) of this bot, if you are interested in reading! :wink:
+            The <a href="(https://github.com/Kivanval/TgBot4J">source code</a> of this bot, if you are interested in reading! :wink:
                     
             You can control me by sending these commands:
                         
             <b>Common Commands</b>
-            /%s - %s
-            /%s - %s
+            <b>/%s</b> - %s
+            <b>/%s</b> - %s
                         
             <b>Manage lists</b>
-            %s - %s
-            %s - %s
+            <b>/%s</b> - %s
+            <b>/%s</b> - %s
             """).formatted(START, START_DESCRIPTION, HELP, HELP_DESCRIPTION,
             CREATE, CREATE_DESCRIPTION, MY_LISTS, MY_LISTS_DESCRIPTION);
 }
