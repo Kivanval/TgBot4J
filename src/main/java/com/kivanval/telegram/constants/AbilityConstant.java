@@ -20,6 +20,21 @@ public final class AbilityConstant {
 
     public static final String CREATE_DESCRIPTION = "create new list";
 
+    public static final String CREATE_REPLY = parseToUnicode("""
+            Great, then I suggest you set the initial settings for the bot.
+            Would you like to?""");
+
+    public static final String CREATE_NO_BUTTON = "No";
+    public static final String CREATE_YES_BUTTON = "Yes";
+    public static final String CREATE_REPLY_NO = parseToUnicode("""
+            OK, then I create a standard list,
+            but you can always edit it with manipulation commands if you want!""");
+
+    public static final String CREATE_REPLY_YES = parseToUnicode("""
+            Hello, dear user! :blush:
+            I will help you create and manage your own lists.
+            Use command */help* to find out the bot's functionality! :wink:""");
+
     public static final String HELP = "help";
     public static final String HELP_DESCRIPTION = "gives out a help message with command descriptions";
 

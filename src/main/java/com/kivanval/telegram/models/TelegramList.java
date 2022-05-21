@@ -61,7 +61,7 @@ public class TelegramList implements Serializable {
     @Future
     protected LocalDateTime endDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(
             name = "creator_id",
             referencedColumnName = "id",
@@ -70,12 +70,10 @@ public class TelegramList implements Serializable {
     )
     @Valid
     @NotNull
+    @ToString.Exclude
     protected TelegramUser creator;
 
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
-    )
+    @ManyToMany
     @JoinTable(
             name = "LISTS_MANAGERS",
             joinColumns = @JoinColumn(
@@ -93,18 +91,48 @@ public class TelegramList implements Serializable {
     )
     @NotNull
     @ToString.Exclude
-    private Set<@Valid TelegramUser> managers = new HashSet<>();
+    private Set<@Valid @NotNull TelegramUser> managers = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "list",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    @NotNull
+    @ToString.Exclude
+    private List<@Valid @NotNull ListedPlace> listedPlaces = new ArrayList<>();
+
+
+    public TelegramList addCreator(TelegramUser creator) {
+        if (Objects.equals(creator, null))
+            throw new NullPointerException("Can't add null creator");
+        setCreator(creator);
+        creator.getCreatedLists().add(this);
+        return this;
+    }
 
     public TelegramList addManager(TelegramUser manager) {
         if (Objects.equals(manager, null))
-            throw new NullPointerException("Can't add null entityManager");
+            throw new NullPointerException("Can't add null manager");
         if (Objects.equals(creator, manager))
-            throw new IllegalStateException("%s is an creator of this list"
+            throw new IllegalArgumentException("%s is an creator of this list"
                     .formatted(TelegramUserUtils.getName(creator)));
         if (managers.contains(manager))
-            throw new IllegalStateException("%s is already a entityManager of this list"
+            throw new IllegalArgumentException("%s is already a manager of this list"
                     .formatted(TelegramUserUtils.getName(manager)));
-        getManagers().add(manager);
+        managers.add(manager);
+        manager.getManagedLists().add(this);
+        return this;
+    }
+
+    public TelegramList removeManager(TelegramUser manager) {
+        if (Objects.equals(manager, null))
+            throw new NullPointerException("Can't add null entityManager");
+        if (!managers.contains(manager))
+            throw new IllegalArgumentException("%s isn't a manager"
+                    .formatted(TelegramUserUtils.getName(creator)));
+        managers.remove(manager);
+        manager.getManagedLists().remove(this);
         return this;
     }
 

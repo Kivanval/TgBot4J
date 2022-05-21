@@ -17,15 +17,15 @@ import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 public class GreetingAbility implements AbilityExtension {
 
     public Reply replyToGreeting() {
-        BiConsumer<BaseAbilityBot, Update> action = (bot, update) -> bot.silent()
+        BiConsumer<BaseAbilityBot, Update> action = (bot, upd) -> bot.silent()
                 .execute(SendMessage.builder()
-                        .chatId(String.valueOf(getChatId(update)))
-                        .replyToMessageId(update.getMessage().getMessageId())
+                        .chatId(String.valueOf(getChatId(upd)))
+                        .replyToMessageId(upd.getMessage().getMessageId())
                         .text(AbilityConstant.GREETING_REPLY)
                         .build()
                 );
 
-        return Reply.of(action, Flag.MESSAGE, Flag.TEXT, isGreetingProtocol());
+        return Reply.of(action, Flag.TEXT, isGreetingProtocol());
     }
 
     private static final String GREETING_REGEX = "^(?iu)[^\\p{L}]*СЛАВА\\s+УКРАЇНІ[^\\p{L}]*$";

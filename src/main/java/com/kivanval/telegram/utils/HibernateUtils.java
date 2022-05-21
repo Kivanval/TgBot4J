@@ -10,7 +10,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-public class HibernateUtils {
+public final class HibernateUtils {
+    private HibernateUtils() {
+    }
+
     private static final SessionFactory ourSessionFactory;
 
     static {
@@ -26,7 +29,7 @@ public class HibernateUtils {
                     .addAnnotatedClass(TelegramUser.class)
                     .buildMetadata()
                     .buildSessionFactory();
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             throw new ExceptionInInitializerError(ex);
         }
     }
