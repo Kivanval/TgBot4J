@@ -30,14 +30,14 @@ public final class KeyboardFactory {
         return replyKeyboard;
     }
 
-    public static final String STOP_BUTTON = "stop";
-    public static final String RIGHT_BUTTON = "right";
+    public static final String STOP = "stop";
+    public static final String RIGHT = "right";
 
-    public static final String LEFT_BUTTON = "left";
+    public static final String LEFT = "left";
 
-    public static final String NONE_BUTTON = "none";
+    public static final String NONE = "none";
 
-    public static final String GET_BUTTON = "get";
+    public static final String ONE_BY_ONE = "one-by-one";
 
 
     public static InlineKeyboardMarkup listNavigationKeyboard(int listSize, int number) {
@@ -47,27 +47,27 @@ public final class KeyboardFactory {
         if (number < 1) {
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":black_square_for_stop:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP_BUTTON)
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP)
                     .build());
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":black_square_for_stop:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP_BUTTON)
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP)
                     .build());
         } else {
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":rewind:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + LEFT_BUTTON + " " + 0)
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + LEFT + " " + 0)
                     .build());
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":arrow_backward:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + LEFT_BUTTON + " " + (number - 1))
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + LEFT + " " + (number - 1))
                     .build());
         }
 
         if (number == -1) {
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text("none")
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + NONE_BUTTON)
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + NONE)
                     .build());
         } else {
             keyboardRow.add(InlineKeyboardButton.builder()
@@ -79,20 +79,20 @@ public final class KeyboardFactory {
         if (listSize < 2 || number >= listSize - 1) {
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":black_square_for_stop:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP_BUTTON)
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP)
                     .build());
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":black_square_for_stop:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP_BUTTON)
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + STOP)
                     .build());
         } else {
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":arrow_forward:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + RIGHT_BUTTON + " " + (number + 1))
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + RIGHT + " " + (number + 1))
                     .build());
             keyboardRow.add(InlineKeyboardButton.builder()
                     .text(parseToUnicode(":fast_forward:"))
-                    .callbackData(AbilityConstant.MY_LISTS + "_" + RIGHT_BUTTON + " " + (listSize - 1))
+                    .callbackData(AbilityConstant.MY_LISTS + "_" + RIGHT + " " + (listSize - 1))
                     .build());
         }
 
@@ -106,8 +106,8 @@ public final class KeyboardFactory {
         List<List<InlineKeyboardButton>> keyboardsRows = new ArrayList<>();
         List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
         keyboardRow.add(InlineKeyboardButton.builder()
-                .text("get one-by-one")
-                .callbackData(AbilityConstant.MY_LISTS + "_" + GET_BUTTON)
+                .text("one-by-one")
+                .callbackData(AbilityConstant.MY_LISTS + "_" + ONE_BY_ONE)
                 .build());
         keyboardsRows.add(keyboardRow);
         inlineKeyboard.setKeyboard(keyboardsRows);

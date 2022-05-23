@@ -7,6 +7,7 @@ import com.kivanval.telegram.data.repositories.TelegramUserRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.Setter;
+import org.checkerframework.checker.units.qual.A;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.db.Var;
@@ -17,7 +18,11 @@ import org.telegram.abilitybots.api.toggle.AbilityToggle;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.time.ZonedDateTime;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
@@ -26,18 +31,14 @@ import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
 public class TelegramBot extends AbilityBot {
 
-    private TelegramUserRepository userRepository;
-    private TelegramListRepository listRepository;
+    private AtomicInteger replyFlowId = new AtomicInteger();
 
     TelegramBot(DBContext dbContext) {
         super(BotConfigConstant.BOT_TOKEN, BotConfigConstant.BOT_USERNAME, dbContext);
     }
 
-    public TelegramBot(TelegramUserRepository userRepository, TelegramListRepository listRepository) {
+    public TelegramBot() {
         super(BotConfigConstant.BOT_TOKEN, BotConfigConstant.BOT_USERNAME);
-        this.db.getVar("ReplyFlowId").set(0);
-        this.userRepository = userRepository;
-        this.listRepository = listRepository;
     }
 
     public TelegramBot(String token, String username) {
@@ -46,6 +47,11 @@ public class TelegramBot extends AbilityBot {
 
     public TelegramBot(String token, String username, AbilityToggle toggle) {
         super(token, username, toggle);
+    }
+
+    @Override
+    public void onUpdateReceived(Update update) {
+        ForkJoinTask.adapt(() -> super.onUpdateReceived(update)).fork();
     }
 
     public AbilityExtension replyToHelp() {

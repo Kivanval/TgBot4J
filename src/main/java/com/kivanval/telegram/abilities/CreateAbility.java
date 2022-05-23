@@ -2,16 +2,15 @@ package com.kivanval.telegram.abilities;
 
 import com.kivanval.telegram.bot.TelegramBot;
 import com.kivanval.telegram.constants.AbilityConstant;
+import com.kivanval.telegram.data.repositories.JpaTelegramListRepository;
 import com.kivanval.telegram.data.repositories.TelegramListRepository;
-import com.kivanval.telegram.data.repositories.TelegramUserRepository;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
-import lombok.AllArgsConstructor;
+import com.kivanval.telegram.utils.HibernateUtils;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.telegram.abilitybots.api.db.DBContext;
-import org.telegram.abilitybots.api.db.Var;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.objects.ReplyFlow;
@@ -22,14 +21,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static com.kivanval.telegram.utils.UpdatePredicateFactory.hasMessageWith;
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class CreateAbility implements AbilityExtension {
     private TelegramBot bot;
+
+    private TelegramListRepository listRepository;
+
+
+    public CreateAbility(TelegramBot bot) {
+        this.bot = bot;
+    }
 
     public static final String REPLY_GET_ALIAS = """
             OK, the list has been created!
@@ -39,9 +44,9 @@ public class CreateAbility implements AbilityExtension {
     public static final String EMPTY = "/empty";
 
     public ReplyFlow replyToCreate() {
-        final Var<Integer> id = bot.db().getVar("ReplyFlowId");
 
         Reply replyToGetAlias = Reply.of((abilityBot, upd) -> {
+
                     TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());
 
                     String alias = upd.getMessage().getText();
@@ -51,7 +56,7 @@ public class CreateAbility implements AbilityExtension {
                     list.setAlias(alias);
                     list.setCreator(user);
 
-                    bot.getListRepository().update(list);
+                    listRepository.update(list);
 
                     bot.silent().execute(SendMessage.builder()
                             .disableWebPagePreview(true)
@@ -60,7 +65,7 @@ public class CreateAbility implements AbilityExtension {
                             .text(REPLY_GET_ALIAS)
                             .build()
                     );
-
+                    listRepository.close();
                 },
                 Flag.TEXT,
                 Predicate.not(hasMessageWith("/" + AbilityConstant.CREATE)),
@@ -68,9 +73,7 @@ public class CreateAbility implements AbilityExtension {
                 uniqueAlias()
         );
 
-        int value = id.get();
-        id.set(value + 1);
-        return ReplyFlow.builder(bot.db(), value)
+        return ReplyFlow.builder(bot.db(), bot.getReplyFlowId().incrementAndGet())
                 .action((baseAbilityBot, upd) -> bot.silent().execute(
                         SendMessage.builder()
                                 .disableWebPagePreview(true)
@@ -82,10 +85,6 @@ public class CreateAbility implements AbilityExtension {
                 .onlyIf(hasMessageWith("/" + AbilityConstant.CREATE))
                 .next(replyToGetAlias)
                 .build();
-    }
-
-    private static Predicate<Update> hasMessageWith(String msg) {
-        return Flag.TEXT.and(upd -> upd.getMessage().getText().equalsIgnoreCase(msg));
     }
 
 
@@ -111,9 +110,12 @@ public class CreateAbility implements AbilityExtension {
 
     private Predicate<Update> uniqueAlias() {
         return upd -> {
-            Optional<TelegramList> list = bot.getListRepository().getByAlias(upd.getMessage().getText());
+            Session session = HibernateUtils.getSession();
+            listRepository = TelegramListRepository.jpaInstance(session);
+            Optional<TelegramList> list = listRepository.getByAlias(upd.getMessage().getText());
             if (list.isPresent()) {
                 bot.silent().send(REPLY_NO_UQ_ALIAS, getChatId(upd));
+                listRepository.close();
             }
             return list.isEmpty();
         };

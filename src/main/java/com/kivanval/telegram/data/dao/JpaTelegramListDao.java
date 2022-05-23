@@ -57,7 +57,6 @@ public record JpaTelegramListDao(EntityManager entityManager) implements Telegra
                         SELECT l
                             FROM TelegramList l
                             WHERE l.creator.id = :creatorId
-                            ORDER BY l.startDate
                         """, TelegramList.class)
                 .setParameter("creatorId", creatorId);
         return query.getResultList();

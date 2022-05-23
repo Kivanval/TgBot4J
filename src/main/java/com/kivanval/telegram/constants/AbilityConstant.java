@@ -26,7 +26,7 @@ public final class AbilityConstant {
 
     public static final String MY_LISTS = "mylists";
 
-    public static final String MY_LISTS_DESCRIPTION = "show existing queues created";
+    public static final String MY_LISTS_DESCRIPTION = "show existing lists created";
 
     public static final String HELP = "help";
     public static final String HELP_DESCRIPTION = "gives out a help message with command descriptions";
