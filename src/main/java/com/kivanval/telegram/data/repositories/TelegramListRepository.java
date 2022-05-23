@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TelegramListRepository extends Repository<TelegramList, Long> {
+
     Optional<TelegramList> getByAlias(String alias);
 
     List<TelegramList> getByManagerId(Long managerId);
+
 
     List<TelegramList> getByUserId(Long userId);
 
     List<TelegramList> getByCreatorId(Long creatorId);
 
-    List<TelegramList> getExistingByCreatorId(Long creatorId);
-
-    List<TelegramList> getExistingByCreatorIdOrderByStartDate(Long creatorId);
+    List<TelegramList> getByCreatorIdOrderByStartDate(Long creatorId);
 
     static JpaTelegramListRepository jpaInstance(EntityManager em) {
         return new JpaTelegramListRepository(new JpaTelegramListDao(em));

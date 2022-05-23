@@ -2,14 +2,10 @@ package com.kivanval.telegram.abilities;
 
 import com.kivanval.telegram.bot.TelegramBot;
 import com.kivanval.telegram.constants.AbilityConstant;
-import com.kivanval.telegram.data.repositories.JpaTelegramListRepository;
 import com.kivanval.telegram.data.repositories.TelegramListRepository;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
 import com.kivanval.telegram.utils.HibernateUtils;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Reply;
@@ -24,10 +20,9 @@ import java.util.function.Predicate;
 import static com.kivanval.telegram.utils.UpdatePredicateFactory.hasMessageWith;
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
-@Getter
-@Setter
+
 public class CreateAbility implements AbilityExtension {
-    private TelegramBot bot;
+    private final TelegramBot bot;
 
     private TelegramListRepository listRepository;
 
@@ -67,10 +62,9 @@ public class CreateAbility implements AbilityExtension {
                     );
                     listRepository.close();
                 },
-                Flag.TEXT,
                 Predicate.not(hasMessageWith("/" + AbilityConstant.CREATE)),
                 hasMessageValidateAlias(),
-                uniqueAlias()
+                isUniqueAlias()
         );
 
         return ReplyFlow.builder(bot.db(), bot.getReplyFlowId().incrementAndGet())
@@ -108,7 +102,7 @@ public class CreateAbility implements AbilityExtension {
 
     public static final String REPLY_NO_UQ_ALIAS = "Sorry, that name is already taken. Try another one.";
 
-    private Predicate<Update> uniqueAlias() {
+    private Predicate<Update> isUniqueAlias() {
         return upd -> {
             Session session = HibernateUtils.getSession();
             listRepository = TelegramListRepository.jpaInstance(session);

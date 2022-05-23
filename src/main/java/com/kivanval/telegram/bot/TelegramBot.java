@@ -2,29 +2,17 @@ package com.kivanval.telegram.bot;
 
 import com.kivanval.telegram.abilities.*;
 import com.kivanval.telegram.constants.BotConfigConstant;
-import com.kivanval.telegram.data.repositories.TelegramListRepository;
-import com.kivanval.telegram.data.repositories.TelegramUserRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.Setter;
-import org.checkerframework.checker.units.qual.A;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.db.DBContext;
-import org.telegram.abilitybots.api.db.Var;
-import org.telegram.abilitybots.api.objects.Reply;
-import org.telegram.abilitybots.api.objects.ReplyFlow;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.toggle.AbilityToggle;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.time.ZonedDateTime;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
 @Getter
 @Setter
@@ -72,6 +60,10 @@ public class TelegramBot extends AbilityBot {
 
     public AbilityExtension replyToMyLists() {
         return new MyListsAbility(this);
+    }
+
+    public AbilityExtension replyToListInfo() {
+        return new ListInfoAbility(this);
     }
 
     protected void setSilentSender(SilentSender silent) {

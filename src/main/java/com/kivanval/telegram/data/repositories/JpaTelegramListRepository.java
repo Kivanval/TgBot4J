@@ -3,6 +3,7 @@ package com.kivanval.telegram.data.repositories;
 import com.kivanval.telegram.data.dao.JpaTelegramListDao;
 import com.kivanval.telegram.models.TelegramList;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -40,16 +41,10 @@ public record JpaTelegramListRepository(JpaTelegramListDao dao) implements Teleg
         return dao.readByCreatorId(creatorId);
     }
 
-    @Override
-    public List<TelegramList> getExistingByCreatorId(Long creatorId) {
-        return dao.readByCreatorId(creatorId).parallelStream()
-                .filter(Predicate.not(l -> l.getState().equals(TelegramList.State.DELETED)))
-                .toList();
-    }
 
     @Override
-    public List<TelegramList> getExistingByCreatorIdOrderByStartDate(Long creatorId) {
-        return getExistingByCreatorId(creatorId).parallelStream()
+    public List<TelegramList> getByCreatorIdOrderByStartDate(Long creatorId) {
+        return getByCreatorId(creatorId).parallelStream()
                 .sorted(Comparator.comparing(TelegramList::getStartDate))
                 .toList();
     }

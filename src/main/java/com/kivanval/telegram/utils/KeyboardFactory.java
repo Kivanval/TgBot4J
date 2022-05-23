@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
@@ -16,17 +17,14 @@ public final class KeyboardFactory {
     private KeyboardFactory() {
     }
 
-    public static final String NO_BUTTON = "No";
-    public static final String YES_BUTTON = "Yes";
-
-    public static ReplyKeyboard getChoiceKeyboard() {
+    public static ReplyKeyboard getChoiceKeyboard(Collection<String> names) {
         ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow keyboardRow = new KeyboardRow();
-        keyboardRow.add(YES_BUTTON);
-        keyboardRow.add(NO_BUTTON);
+        names.forEach(keyboardRow::add);
         keyboardRows.add(keyboardRow);
         replyKeyboard.setKeyboard(keyboardRows);
+        replyKeyboard.setResizeKeyboard(true);
         return replyKeyboard;
     }
 
@@ -36,8 +34,6 @@ public final class KeyboardFactory {
     public static final String LEFT = "left";
 
     public static final String NONE = "none";
-
-    public static final String ONE_BY_ONE = "one-by-one";
 
 
     public static InlineKeyboardMarkup listNavigationKeyboard(int listSize, int number) {
@@ -100,6 +96,8 @@ public final class KeyboardFactory {
         inlineKeyboard.setKeyboard(keyboardsRows);
         return inlineKeyboard;
     }
+
+    public static final String ONE_BY_ONE = "one-by-one";
 
     public static InlineKeyboardMarkup generalListInfoKeyboard() {
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();

@@ -3,8 +3,10 @@ package com.kivanval.telegram.data.dao;
 import com.kivanval.telegram.models.TelegramList;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.TypedQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;

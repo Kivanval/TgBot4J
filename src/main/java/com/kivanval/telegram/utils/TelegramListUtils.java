@@ -1,5 +1,6 @@
 package com.kivanval.telegram.utils;
 
+import com.kivanval.telegram.constants.BotConfigConstant;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
 
@@ -7,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public final class TelegramListUtils {
+
     private TelegramListUtils() {
     }
 
@@ -14,11 +16,13 @@ public final class TelegramListUtils {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd h:mm a");
         final StringBuilder sb = new StringBuilder();
         sb.append("<b>creator</b>: ")
-                .append("<code>")
+                .append("<b><a href=\"tg://user?id=%d\">".formatted(list.getCreator().getId()))
                 .append(TelegramUserUtils.getName(list.getCreator()))
-                .append("</code>");
+                .append("</a></b>");
         sb.append("\n\n<b>id</b>: ")
-                .append(list.getId());
+                .append("<code>")
+                .append(list.getId())
+                .append("</code>");
         if (list.getAlias() != null) {
             sb.append("\n<b>alias</b>: ")
                     .append("<code>")
@@ -27,6 +31,8 @@ public final class TelegramListUtils {
         }
         sb.append("\n\n<b>state</b>: ")
                 .append(list.getState());
+        sb.append("\n<b>privacy</b>: ")
+                .append(list.getPrivacy());
         if (list.getMaxSize() != null) {
             sb.append("\n<b>max size</b>: ")
                     .append(list.getMaxSize());
@@ -44,9 +50,9 @@ public final class TelegramListUtils {
         TelegramUser creator = lists.get(0).getCreator();
         final StringBuilder sb = new StringBuilder();
         sb.append("<b>creator</b>: ")
-                .append("<code>")
+                .append("<b><a href=\"tg://user?id=%d\">".formatted(creator.getId()))
                 .append(TelegramUserUtils.getName(creator))
-                .append("</code>");
+                .append("</a></b>");
         sb.append("\n\n<b>number of lists</b>: ")
                 .append(lists.size());
         sb.append("\n<b>number of people on the lists</b>: ")

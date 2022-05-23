@@ -1,6 +1,5 @@
 package com.kivanval.telegram.utils;
 
-import com.kivanval.telegram.constants.AbilityConstant;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -15,6 +14,6 @@ public final class UpdatePredicateFactory {
     }
 
     public static Predicate<Update> isNameCallbackQuery(String name) {
-        return upd -> upd.getCallbackQuery().getData().startsWith(name);
+        return Flag.CALLBACK_QUERY.and(upd -> upd.getCallbackQuery().getData().startsWith(name));
     }
 }

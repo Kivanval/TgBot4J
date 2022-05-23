@@ -29,7 +29,11 @@ import java.util.*;
 @ToString
 public class TelegramList implements Serializable {
     public enum State {
-        ACTIVE, FREEZE, DELETED
+        ACTIVE, FREEZE
+    }
+
+    public enum Privacy {
+        PRIVATE, PUBLIC
     }
 
     @Id
@@ -49,6 +53,11 @@ public class TelegramList implements Serializable {
     @NotNull
     protected State state = State.ACTIVE;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "privacy", nullable = false)
+    @NotNull
+    protected Privacy privacy = Privacy.PUBLIC;
+
     @Column(name = "max_size")
     @Positive
     protected Integer maxSize;
@@ -64,7 +73,7 @@ public class TelegramList implements Serializable {
 
     @ManyToOne(
             fetch = FetchType.EAGER,
-            cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(
             name = "creator_id",
             referencedColumnName = "id",
