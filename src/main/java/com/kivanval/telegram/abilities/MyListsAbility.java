@@ -23,8 +23,6 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.List;
 
-import static com.kivanval.telegram.constants.AbilityConstant.GENERAL_LISTS_TITLE;
-import static com.kivanval.telegram.constants.AbilityConstant.LISTS_NAVIGATION_TITLE;
 import static com.kivanval.telegram.utils.KeyboardFactory.*;
 import static com.kivanval.telegram.utils.UpdatePredicateFactory.isNameCallbackQuery;
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
@@ -42,7 +40,7 @@ public class MyListsAbility implements AbilityExtension {
             You can create them with the command <b>/create</b>.
              """);
 
-
+    public static final String GENERAL_LISTS_TITLE = parseToUnicode("<u><b>General List Information</b></u>");
     public Ability replyToMyLists() {
         return Ability.builder()
                 .name("mylists")
@@ -83,8 +81,7 @@ public class MyListsAbility implements AbilityExtension {
                             int number = Integer.parseInt(data.split(" ")[1]);
                             List<TelegramList> lists = listRepository
                                     .getByCreatorIdOrderByStartDate(query.getFrom().getId());
-                            String replyText = LISTS_NAVIGATION_TITLE + "\n\n" +
-                                    TelegramListUtils.getInfo(lists.get(number));
+                            String replyText = TelegramListUtils.getInfo(lists.get(number));
                             bot.silent().execute(EditMessageText.builder()
                                     .disableWebPagePreview(true)
                                     .parseMode("HTML")
@@ -96,8 +93,8 @@ public class MyListsAbility implements AbilityExtension {
                         } else if (data.contains(ONE_BY_ONE)) {
                             List<TelegramList> lists = listRepository
                                     .getByCreatorIdOrderByStartDate(query.getFrom().getId());
-                            String replyText = LISTS_NAVIGATION_TITLE + "\n\n" +
-                                    (lists.isEmpty() ? EMPTY_LIST : TelegramListUtils.getInfo(lists.get(0)));
+                            String replyText = (lists.isEmpty() ?
+                                    EMPTY_LIST : TelegramListUtils.getInfo(lists.get(0)));
                             bot.silent().execute(SendMessage.builder()
                                     .disableWebPagePreview(true)
                                     .parseMode("HTML")

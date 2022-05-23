@@ -1,21 +1,34 @@
 package com.kivanval.telegram.utils;
 
-import com.kivanval.telegram.constants.BotConfigConstant;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiManager;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class TelegramListUtils {
 
     private TelegramListUtils() {
     }
 
+    public static String getAutoTitle() {
+        List<Emoji> emojis = new ArrayList<>(EmojiManager.getAll());
+        Collections.shuffle(emojis);
+        return emojis.stream().limit(5).map(Emoji::getUnicode).collect(Collectors.joining());
+    }
+
     public static String getInfo(TelegramList list) {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd h:mm a");
         final StringBuilder sb = new StringBuilder();
-        sb.append("<b>creator</b>: ")
+        sb.append("<b><u>")
+                .append(list.getTitle())
+                .append("</u></b>");
+        sb.append("\n\n<b>creator</b>: ")
                 .append("<b><a href=\"tg://user?id=%d\">".formatted(list.getCreator().getId()))
                 .append(TelegramUserUtils.getName(list.getCreator()))
                 .append("</a></b>");
@@ -23,16 +36,8 @@ public final class TelegramListUtils {
                 .append("<code>")
                 .append(list.getId())
                 .append("</code>");
-        if (list.getAlias() != null) {
-            sb.append("\n<b>alias</b>: ")
-                    .append("<code>")
-                    .append(list.getAlias())
-                    .append("</code>");
-        }
         sb.append("\n\n<b>state</b>: ")
                 .append(list.getState());
-        sb.append("\n<b>privacy</b>: ")
-                .append(list.getPrivacy());
         if (list.getMaxSize() != null) {
             sb.append("\n<b>max size</b>: ")
                     .append(list.getMaxSize());

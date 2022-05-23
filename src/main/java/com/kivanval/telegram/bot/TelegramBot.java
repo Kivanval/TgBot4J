@@ -62,10 +62,6 @@ public class TelegramBot extends AbilityBot {
         return new MyListsAbility(this);
     }
 
-    public AbilityExtension replyToListInfo() {
-        return new ListInfoAbility(this);
-    }
-
     protected void setSilentSender(SilentSender silent) {
         this.silent = silent;
     }

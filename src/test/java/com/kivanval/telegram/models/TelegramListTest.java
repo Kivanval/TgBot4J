@@ -38,7 +38,7 @@ class TelegramListTest {
     @Test
     void aliasTooShort() {
         TelegramList list = getValidTelegramList();
-        list.alias = "";
+        list.title = "";
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
@@ -119,7 +119,6 @@ class TelegramListTest {
     @Test
     void creatorIsNotValid() {
         TelegramList list = getValidTelegramList();
-        list.creator.isBot = null;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 

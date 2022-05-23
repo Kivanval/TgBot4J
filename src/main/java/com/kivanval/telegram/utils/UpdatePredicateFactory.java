@@ -13,6 +13,10 @@ public final class UpdatePredicateFactory {
         return Flag.TEXT.and(upd -> upd.getMessage().getText().equalsIgnoreCase(msg));
     }
 
+    public static Predicate<Update> hasMessageCommand() {
+        return Flag.TEXT.and(upd -> upd.getMessage().getText().startsWith("/"));
+    }
+
     public static Predicate<Update> isNameCallbackQuery(String name) {
         return Flag.CALLBACK_QUERY.and(upd -> upd.getCallbackQuery().getData().startsWith(name));
     }

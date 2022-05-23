@@ -12,18 +12,10 @@ import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Entity
-@Table(
-        name = "LISTS",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        columnNames = {"alias"},
-                        name = "lists_alias_uq")
-        }
-)
+@Table(name = "LISTS")
 @Getter
 @Setter
 @ToString
@@ -32,31 +24,23 @@ public class TelegramList implements Serializable {
         ACTIVE, FREEZE
     }
 
-    public enum Privacy {
-        PRIVATE, PUBLIC
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
     protected Long id;
 
-    @Column(name = "alias")
+    @Column(name = "title", nullable = false)
     @Size(
             min = 1,
             max = 255
     )
-    protected String alias;
+    @NotNull
+    protected String title;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     @NotNull
     protected State state = State.ACTIVE;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "privacy", nullable = false)
-    @NotNull
-    protected Privacy privacy = Privacy.PUBLIC;
 
     @Column(name = "max_size")
     @Positive

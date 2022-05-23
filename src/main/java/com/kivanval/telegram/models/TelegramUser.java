@@ -41,11 +41,6 @@ public class TelegramUser implements Serializable {
     @NotNull
     protected String firstName;
 
-    @Column(name = "is_bot", nullable = false)
-    @NotNull
-    protected Boolean isBot;
-
-
     @Column(name = "last_name")
     @Size(max = 255)
     protected String lastName;
@@ -61,21 +56,11 @@ public class TelegramUser implements Serializable {
     )
     protected String languageCode;
 
-    @Column(name = "can_join_groups")
-    protected Boolean canJoinGroups;
-
-    @Column(name = "can_read_all_group_messages")
-    protected Boolean canReadAllGroupMessages;
-
-    @Column(name = "supports_inline_queries")
-    protected Boolean supportInlineQueries;
-
     @OneToMany(
             mappedBy = "creator",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
-    @Valid
     @NotNull
     @ToString.Exclude
     private List<@Valid @NotNull TelegramList> createdLists = new ArrayList<>();
@@ -114,13 +99,9 @@ public class TelegramUser implements Serializable {
         TelegramUser telegramUser = new TelegramUser();
         telegramUser.id = user.getId();
         telegramUser.firstName = user.getFirstName();
-        telegramUser.isBot = user.getIsBot();
         telegramUser.lastName = user.getLastName();
         telegramUser.userName = user.getUserName();
         telegramUser.languageCode = user.getLanguageCode();
-        telegramUser.canJoinGroups = user.getCanJoinGroups();
-        telegramUser.canReadAllGroupMessages = user.getCanReadAllGroupMessages();
-        telegramUser.supportInlineQueries = user.getSupportInlineQueries();
         return telegramUser;
     }
 
