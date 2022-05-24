@@ -24,9 +24,9 @@ public final class AbilityConstant {
             OK, Let's give your list a title.
             If you don't want to do this yet, just write <b>/auto.</b>""");
 
-    public static final String MY_LISTS = "mylists";
+    public static final String LISTS = "lists";
 
-    public static final String MY_LISTS_DESCRIPTION = "shows existing lists created";
+    public static final String LISTS_DESCRIPTION = "shows existing lists created";
     public static final String HELP = "help";
     public static final String HELP_DESCRIPTION = "gives out a help message with command descriptions";
     public static final String HELP_REPLY = parseToUnicode("""
@@ -45,7 +45,7 @@ public final class AbilityConstant {
             <b>Manage lists</b>
             <b>/%s</b> - %s
             """).formatted(START, START_DESCRIPTION, HELP, HELP_DESCRIPTION,
-            MY_LISTS, MY_LISTS_DESCRIPTION,
+            LISTS, LISTS_DESCRIPTION,
             CREATE, CREATE_DESCRIPTION
     );
 }

@@ -30,7 +30,7 @@ public class CreateAbility implements AbilityExtension {
 
     public static final String REPLY_GET_TITLE = """
             OK, the list has been created with name '%s'!
-            You can see it on <b>/mylists</b>.""";
+            You can see it on <b>/lists</b>.""";
 
 
     public static final String AUTO = "/auto";

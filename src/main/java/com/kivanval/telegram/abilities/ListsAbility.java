@@ -28,10 +28,10 @@ import static com.kivanval.telegram.utils.UpdatePredicateFactory.isNameCallbackQ
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
-public class MyListsAbility implements AbilityExtension {
+public class ListsAbility implements AbilityExtension {
     private final TelegramBot bot;
 
-    public MyListsAbility(TelegramBot bot) {
+    public ListsAbility(TelegramBot bot) {
         this.bot = bot;
     }
 
@@ -43,8 +43,8 @@ public class MyListsAbility implements AbilityExtension {
     public static final String GENERAL_LISTS_TITLE = parseToUnicode("<u><b>General List Information</b></u>");
     public Ability replyToMyLists() {
         return Ability.builder()
-                .name("mylists")
-                .info(AbilityConstant.MY_LISTS_DESCRIPTION)
+                .name(AbilityConstant.LISTS)
+                .info(AbilityConstant.LISTS_DESCRIPTION)
                 .privacy(Privacy.PUBLIC)
                 .locality(Locality.USER)
                 .action(ctx -> {
@@ -109,6 +109,6 @@ public class MyListsAbility implements AbilityExtension {
                                 .build());
                     }
                 },
-                isNameCallbackQuery(AbilityConstant.MY_LISTS));
+                isNameCallbackQuery(AbilityConstant.LISTS));
     }
 }
