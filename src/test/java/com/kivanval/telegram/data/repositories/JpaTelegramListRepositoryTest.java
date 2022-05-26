@@ -34,7 +34,6 @@ class JpaTelegramListRepositoryTest {
         TelegramList list = new TelegramList();
         list.setState(TelegramList.State.FREEZE);
         TelegramUser user = userRepository.getById(3L).orElseThrow();
-        user.setIsBot(true);
         userRepository.update(user);
         list.setCreator(user);
         list.setStartDate(LocalDateTime.now());

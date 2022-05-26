@@ -30,7 +30,6 @@ class JpaTelegramUserRepositoryTest {
         TelegramUser user = new TelegramUser();
         user.setId(id);
         user.setFirstName("test");
-        user.setIsBot(false);
         user.setUserName("testing" + user.getId());
         repository.add(user);
         Mockito.verify(session).persist(user);
@@ -42,7 +41,6 @@ class JpaTelegramUserRepositoryTest {
         TelegramUser user = new TelegramUser();
         user.setId(10904L);
         user.setFirstName("test");
-        user.setIsBot(false);
         user.setUserName("testing" + user.getId());
         repository.update(user);
         Mockito.verify(session).merge(user);
@@ -54,7 +52,6 @@ class JpaTelegramUserRepositoryTest {
         TelegramUser user = new TelegramUser();
         user.setId(10905L);
         user.setFirstName("test");
-        user.setIsBot(false);
         repository.delete(user);
         Mockito.verify(session).remove(user);
     }
