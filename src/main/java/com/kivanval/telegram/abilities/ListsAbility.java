@@ -3,8 +3,6 @@ package com.kivanval.telegram.abilities;
 
 import com.kivanval.telegram.bot.TelegramBot;
 import com.kivanval.telegram.constants.AbilityConstant;
-import com.kivanval.telegram.data.repositories.TelegramListRepository;
-import com.kivanval.telegram.data.repositories.TelegramUserRepository;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
 import com.kivanval.telegram.utils.HibernateUtils;
@@ -49,8 +47,8 @@ public class ListsAbility implements AbilityExtension {
                 .locality(Locality.USER)
                 .action(ctx -> {
                     Session session = HibernateUtils.getSession();
-                    try (TelegramListRepository listRepository = TelegramListRepository.jpaInstance(session);
-                         TelegramUserRepository userRepository = TelegramUserRepository.jpaInstance(session)) {
+                    try (TelegramListJpaRepository listRepository = TelegramListJpaRepository.jpaInstance(session);
+                         TelegramUserJpaRepository userRepository = TelegramUserJpaRepository.jpaInstance(session)) {
 
                         userRepository.update(TelegramUser.from(ctx.user()));
 
@@ -73,7 +71,7 @@ public class ListsAbility implements AbilityExtension {
     public Reply replyToButtons() {
         return Reply.of((abilityBot, upd) -> {
                     Session session = HibernateUtils.getSession();
-                    try (TelegramListRepository listRepository = TelegramListRepository.jpaInstance(session)) {
+                    try (TelegramListJpaRepository listRepository = TelegramListJpaRepository.jpaInstance(session)) {
 
                         CallbackQuery query = upd.getCallbackQuery();
                         String data = query.getData();

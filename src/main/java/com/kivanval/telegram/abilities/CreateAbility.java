@@ -2,7 +2,6 @@ package com.kivanval.telegram.abilities;
 
 import com.kivanval.telegram.bot.TelegramBot;
 import com.kivanval.telegram.constants.AbilityConstant;
-import com.kivanval.telegram.data.repositories.TelegramListRepository;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
 import com.kivanval.telegram.utils.HibernateUtils;
@@ -39,7 +38,7 @@ public class CreateAbility implements AbilityExtension {
     public ReplyFlow replyToCreate() {
 
         Reply replyToGetAlias = Reply.of((abilityBot, upd) -> {
-                    try (TelegramListRepository listRepository = TelegramListRepository
+                    try (TelegramListJpaRepository listRepository = TelegramListJpaRepository
                             .jpaInstance(HibernateUtils.getSession())) {
 
                         TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());

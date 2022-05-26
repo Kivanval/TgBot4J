@@ -35,6 +35,6 @@ public final class HibernateUtils {
     }
 
     public static Session getSession() throws HibernateException {
-        return ourSessionFactory.openSession();
+        return ourSessionFactory.getCurrentSession();
     }
 }

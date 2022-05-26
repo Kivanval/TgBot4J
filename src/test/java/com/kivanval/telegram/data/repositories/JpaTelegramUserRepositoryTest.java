@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 
 class JpaTelegramUserRepositoryTest {
     static Session session;
-    static TelegramUserRepository repository;
+    static TelegramUserJpaRepository repository;
 
     @BeforeAll
     static void setUp() {

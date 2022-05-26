@@ -6,7 +6,7 @@ import com.kivanval.telegram.models.TelegramUser;
 import java.util.List;
 import java.util.Optional;
 
-public record JpaTelegramUserRepository(JpaTelegramUserDao dao) implements TelegramUserRepository {
+public record JpaTelegramUserRepository(JpaTelegramUserDao dao) implements TelegramUserJpaRepository {
 
     @Override
     public List<TelegramUser> getAll() {

@@ -10,16 +10,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 class JpaTelegramListRepositoryTest {
     static Session session;
-    static TelegramListRepository repository;
+    static TelegramListJpaRepository repository;
 
     @BeforeAll
     static void setUp() {
@@ -30,7 +26,7 @@ class JpaTelegramListRepositoryTest {
 
     @Test
     void add() {
-        TelegramUserRepository userRepository = new JpaTelegramUserRepository(new JpaTelegramUserDao(session));
+        TelegramUserJpaRepository userRepository = new JpaTelegramUserRepository(new JpaTelegramUserDao(session));
         TelegramList list = new TelegramList();
         list.setState(TelegramList.State.FREEZE);
         TelegramUser user = userRepository.getById(3L).orElseThrow();
@@ -44,7 +40,7 @@ class JpaTelegramListRepositoryTest {
     @Test
     @Disabled
     void update() {
-        TelegramUserRepository userRepository = new JpaTelegramUserRepository(new JpaTelegramUserDao(session));
+        TelegramUserJpaRepository userRepository = new JpaTelegramUserRepository(new JpaTelegramUserDao(session));
         TelegramUser user = userRepository.getById(3L).orElseThrow();
         user.setLastName("test");
         TelegramList list = new TelegramList();

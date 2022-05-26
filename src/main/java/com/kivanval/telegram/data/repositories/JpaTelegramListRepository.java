@@ -3,13 +3,11 @@ package com.kivanval.telegram.data.repositories;
 import com.kivanval.telegram.data.dao.JpaTelegramListDao;
 import com.kivanval.telegram.models.TelegramList;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-public record JpaTelegramListRepository(JpaTelegramListDao dao) implements TelegramListRepository {
+public record JpaTelegramListRepository(JpaTelegramListDao dao) implements TelegramListJpaRepository {
 
     @Override
     public List<TelegramList> getAll() {
