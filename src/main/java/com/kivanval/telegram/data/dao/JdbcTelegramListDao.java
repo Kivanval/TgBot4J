@@ -22,7 +22,7 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
     public Set<TelegramList> parse(ResultSet resultSet) {
         Set<TelegramList> lists = new TreeSet<>(Comparator.comparing(TelegramList::getId));
         try {
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 TelegramList list = new TelegramList();
                 list.setId(resultSet.getLong("id"));
                 TelegramUser user = new TelegramUser();
@@ -31,7 +31,7 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
                 list.setTitle(resultSet.getString("title"));
                 list.setStartDate(resultSet.getTimestamp("start_date"));
                 list.setEndDate(resultSet.getTimestamp("end_date"));
-                list.setFreeze(resultSet.getBoolean("isFreeze"));
+                list.setFreeze(resultSet.getBoolean("is_freeze"));
                 lists.add(list);
             }
             return lists;
@@ -52,7 +52,7 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
                         l.start_date,
                         l.end_date,
                         l.max_size,
-                        l.state
+                        l.is_freeze
                     FROM
                         lists l
                     WHERE
@@ -93,7 +93,7 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
                         l.start_date,
                         l.end_date,
                         l.max_size,
-                        l.state
+                        l.is_freeze
                     FROM
                         lists l
                     """;
@@ -127,7 +127,7 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
                         l.start_date,
                         l.end_date,
                         l.max_size,
-                        l.state
+                        l.is_freeze
                     FROM
                         lists l
                     WHERE l.creator_id = ?
@@ -157,8 +157,8 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
         PreparedStatement statement = null;
         try (Connection conn = dataSource.getConnection()) {
             String query = """
-                    INSERT INTO lists (creator_id, title, start_date, end_date, max_size)
-                        VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO lists (creator_id, title, start_date, end_date, max_size, is_freeze)
+                        VALUES (?, ?, ?, ?, ?, ?)
                     """;
             log.info(query);
             statement = conn.prepareStatement(query);
@@ -167,7 +167,8 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
             statement.setTimestamp(3, entity.getStartDate());
             statement.setTimestamp(4, entity.getEndDate());
             statement.setInt(5, entity.getMaxSize());
-            return statement.executeUpdate(query);
+            statement.setBoolean(6, entity.isFreeze());
+            return statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
         } finally {
@@ -204,7 +205,7 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
             statement.setTimestamp(4, entity.getEndDate());
             statement.setInt(5, entity.getMaxSize());
             statement.setLong(6, entity.getId());
-            return statement.executeUpdate(query);
+            return statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
         } finally {
@@ -235,7 +236,7 @@ public class JdbcTelegramListDao implements JdbcDao<TelegramList, Long> {
             log.info(query);
             statement = conn.prepareStatement(query);
             statement.setLong(1, id);
-            return statement.executeUpdate(query);
+            return statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
         } finally {

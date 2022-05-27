@@ -40,4 +40,16 @@ public class TelegramList implements Serializable {
 
     protected boolean isFreeze;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TelegramList list = (TelegramList) o;
+        return Objects.equals(id, list.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

@@ -50,7 +50,7 @@ public class JdbcTelegramListRepository implements Repository<TelegramList, Long
 
     @Override
     public Collection<TelegramList> getAll() {
-        return null;
+        return listDao.readAll();
     }
 
     @Override

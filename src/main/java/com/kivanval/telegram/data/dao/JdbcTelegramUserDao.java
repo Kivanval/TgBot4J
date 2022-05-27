@@ -22,7 +22,7 @@ public class JdbcTelegramUserDao implements JdbcDao<TelegramUser, Long> {
     public Set<TelegramUser> parse(ResultSet resultSet) {
         Set<TelegramUser> users = new TreeSet<>(Comparator.comparing(TelegramUser::getId));
         try {
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 TelegramUser user = new TelegramUser();
                 user.setId(resultSet.getLong("id"));
                 user.setFirstName(resultSet.getString("first_name"));
@@ -196,7 +196,7 @@ public class JdbcTelegramUserDao implements JdbcDao<TelegramUser, Long> {
             statement.setString(3, entity.getLastName());
             statement.setString(4, entity.getUserName());
             statement.setString(5, entity.getLanguageCode());
-            return statement.executeUpdate(query);
+            return statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
         } finally {
@@ -222,7 +222,7 @@ public class JdbcTelegramUserDao implements JdbcDao<TelegramUser, Long> {
             log.info(query);
             statement = conn.prepareStatement(query);
             statement.setLong(1, id);
-            return statement.executeUpdate(query);
+            return statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
         } finally {
