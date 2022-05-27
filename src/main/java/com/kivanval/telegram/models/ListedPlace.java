@@ -1,14 +1,12 @@
 package com.kivanval.telegram.models;
 
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -22,33 +20,31 @@ public class ListedPlace implements Serializable {
         WAITING, AWAY, SERVED
     }
 
-    @Valid
-    @NotNull
-    protected ListedPlaceKey id;
 
+    protected ListedPlaceId id;
 
-    @Valid
-    @NotNull
     protected TelegramList list;
 
-
-    @Valid
-    @NotNull
     protected TelegramUser user;
 
-
-    @NotNull
     protected State state = State.WAITING;
 
-    @PastOrPresent
-    @NotNull
-    protected LocalDateTime entryDate = LocalDateTime.now();
+    protected Timestamp entryDate = Timestamp.valueOf(LocalDateTime.now());
 
-    protected Integer priority;
+    protected Integer ordinal;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ListedPlace that = (ListedPlace) o;
+
+        return Objects.equals(id, that.id);
+    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id != null ? id.hashCode() : 0;
     }
-
 }

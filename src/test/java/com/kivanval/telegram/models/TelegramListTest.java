@@ -46,17 +46,6 @@ class TelegramListTest {
         assertEquals("size must be between 1 and 255", constraintViolations.iterator().next().getMessage());
     }
 
-    @ParameterizedTest
-    @NullSource
-    void stateIsNull(TelegramList.State state) {
-        TelegramList list = getValidTelegramList();
-        list.state = state;
-        Set<ConstraintViolation<TelegramList>> constraintViolations =
-                validator.validate(list);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0})
@@ -135,7 +124,6 @@ class TelegramListTest {
     static TelegramList getValidTelegramList() {
         TelegramList list = new TelegramList();
         list.id = 10903L;
-        list.state = TelegramList.State.ACTIVE;
         list.maxSize = 10903;
         list.creator = TelegramUserTest.getValidTelegramUser();
         return list;

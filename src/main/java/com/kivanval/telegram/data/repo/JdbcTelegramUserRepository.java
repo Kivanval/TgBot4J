@@ -19,7 +19,7 @@ public class JdbcTelegramUserRepository implements Repository<TelegramUser, Long
 
     @Getter
     @Setter
-    public boolean deepExecute;
+    public boolean deepRead;
 
     public JdbcTelegramUserRepository(DataSource dataSource) {
         this.userDao = new JdbcTelegramUserDao(dataSource);
@@ -29,7 +29,7 @@ public class JdbcTelegramUserRepository implements Repository<TelegramUser, Long
     @Override
     public Optional<TelegramUser> getById(Long id) {
         Optional<TelegramUser> userOptional = userDao.readById(id);
-        if (deepExecute && userOptional.isPresent()) {
+        if (deepRead && userOptional.isPresent()) {
             TelegramUser user = userOptional.get();
             Set<TelegramList> lists = listDao.readByCreatorId(user.getId());
             lists.forEach(user::addCreatedList);
@@ -38,13 +38,19 @@ public class JdbcTelegramUserRepository implements Repository<TelegramUser, Long
     }
 
     @Override
-    public Collection<TelegramUser> getAll() {
-        return null;
+    public Set<TelegramUser> getAll() {
+        Set<TelegramUser> lists = userDao.readAll();
+        if (deepRead && !lists.isEmpty()) {
+            lists.forEach(u -> listDao.readByCreatorId(u.getId())
+                    .forEach(u::addCreatedList)
+            );
+        }
+        return lists;
     }
 
     @Override
     public int add(TelegramUser entity) {
-        return 0;
+        return userDao.create(entity);
     }
 
     @Override
@@ -59,6 +65,6 @@ public class JdbcTelegramUserRepository implements Repository<TelegramUser, Long
 
     @Override
     public int remove(TelegramUser entity) {
-        return 0;
+        return listDao.removeById(entity.getId());
     }
 }

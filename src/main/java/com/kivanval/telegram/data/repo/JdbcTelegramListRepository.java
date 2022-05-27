@@ -4,15 +4,11 @@ import com.kivanval.telegram.data.dao.JdbcTelegramListDao;
 import com.kivanval.telegram.data.dao.JdbcTelegramUserDao;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
-import jakarta.validation.ValidatorFactory;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.internal.engine.ValidatorFactoryImpl;
 
 import javax.sql.DataSource;
-import javax.xml.validation.Validator;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class JdbcTelegramListRepository implements Repository<TelegramList, Long> {
 
@@ -21,7 +17,7 @@ public class JdbcTelegramListRepository implements Repository<TelegramList, Long
 
     @Getter
     @Setter
-    public boolean deepExecute;
+    public boolean deepRead;
 
     public JdbcTelegramListRepository(DataSource dataSource) {
         this.userDao = new JdbcTelegramUserDao(dataSource);
@@ -30,12 +26,12 @@ public class JdbcTelegramListRepository implements Repository<TelegramList, Long
 
     @Override
     public Optional<TelegramList> getById(Long id) {
-        return Optional.empty();
+        return listDao.readById(id);
     }
 
     public Set<TelegramList> getByCreatorId(Long id) {
         Set<TelegramList> lists = listDao.readByCreatorId(id);
-        if (deepExecute && !lists.isEmpty()) {
+        if (deepRead && !lists.isEmpty()) {
             Optional<TelegramUser> userOptional = userDao.readById(id);
             userOptional.ifPresent(telegramUser -> lists.forEach(l -> l.setCreator(telegramUser)));
         }
@@ -49,8 +45,14 @@ public class JdbcTelegramListRepository implements Repository<TelegramList, Long
     }
 
     @Override
-    public Collection<TelegramList> getAll() {
-        return listDao.readAll();
+    public Set<TelegramList> getAll() {
+        Set<TelegramList> lists = listDao.readAll();
+        if (deepRead && !lists.isEmpty()) {
+            Long userId = lists.iterator().next().getCreator().getId();
+            Optional<TelegramUser> userOptional = userDao.readById(userId);
+            userOptional.ifPresent(telegramUser -> lists.forEach(l -> l.setCreator(telegramUser)));
+        }
+        return lists;
     }
 
     @Override
@@ -65,11 +67,11 @@ public class JdbcTelegramListRepository implements Repository<TelegramList, Long
 
     @Override
     public int update(TelegramList entity) {
-        return 0;
+        return listDao.update(entity);
     }
 
     @Override
     public int remove(TelegramList entity) {
-        return 0;
+        return listDao.removeById(entity.getId());
     }
 }

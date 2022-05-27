@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +25,7 @@ class ListedPlaceTest {
 
     @ParameterizedTest
     @NullSource
-    void keyIsNull(ListedPlaceKey key) {
+    void keyIsNull(ListedPlaceId key) {
         ListedPlace place = getValidListedNumber();
         place.id = key;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
@@ -95,7 +94,6 @@ class ListedPlaceTest {
     @Test
     void entryDateInTheFuture() {
         ListedPlace place = getValidListedNumber();
-        place.entryDate = LocalDateTime.MAX;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
                 validator.validate(place);
 
@@ -125,11 +123,10 @@ class ListedPlaceTest {
 
     static ListedPlace getValidListedNumber() {
         ListedPlace place = new ListedPlace();
-        place.id = ListedPlaceKeyTest.getValidListedNumberKey();
+        place.id = ListedPlaceIdTest.getValidListedNumberKey();
         place.list = TelegramListTest.getValidTelegramList();
         place.user = TelegramUserTest.getValidTelegramUser();
         place.state = ListedPlace.State.WAITING;
-        place.entryDate = LocalDateTime.MIN;
         return place;
     }
 

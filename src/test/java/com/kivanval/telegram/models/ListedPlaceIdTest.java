@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ListedPlaceKeyTest {
+class ListedPlaceIdTest {
 
     private static Validator validator;
 
@@ -26,9 +26,9 @@ class ListedPlaceKeyTest {
     @ParameterizedTest
     @NullSource
     void listIdIsNull(Long listId) {
-        ListedPlaceKey key = getValidListedNumberKey();
+        ListedPlaceId key = getValidListedNumberKey();
         key.listId = listId;
-        Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
+        Set<ConstraintViolation<ListedPlaceId>> constraintViolations =
                 validator.validate(key);
 
         assertEquals(1, constraintViolations.size());
@@ -38,9 +38,9 @@ class ListedPlaceKeyTest {
     @ParameterizedTest
     @NullSource
     void userIdIsNull(Long userId) {
-        ListedPlaceKey key = getValidListedNumberKey();
+        ListedPlaceId key = getValidListedNumberKey();
         key.userId = userId;
-        Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
+        Set<ConstraintViolation<ListedPlaceId>> constraintViolations =
                 validator.validate(key);
 
         assertEquals(1, constraintViolations.size());
@@ -49,15 +49,15 @@ class ListedPlaceKeyTest {
 
     @Test
     void listedNumberKeyIsValid() {
-        ListedPlaceKey key = getValidListedNumberKey();
-        Set<ConstraintViolation<ListedPlaceKey>> constraintViolations =
+        ListedPlaceId key = getValidListedNumberKey();
+        Set<ConstraintViolation<ListedPlaceId>> constraintViolations =
                 validator.validate(key);
 
         assertEquals(0, constraintViolations.size());
     }
 
-    static ListedPlaceKey getValidListedNumberKey() {
-        ListedPlaceKey key = new ListedPlaceKey();
+    static ListedPlaceId getValidListedNumberKey() {
+        ListedPlaceId key = new ListedPlaceId();
         key.listId = 0L;
         key.userId = 0L;
         return key;

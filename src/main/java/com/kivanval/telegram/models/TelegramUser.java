@@ -2,10 +2,7 @@ package com.kivanval.telegram.models;
 
 
 import com.kivanval.telegram.utils.TelegramUserUtils;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,31 +20,14 @@ import java.util.Objects;
 @ToString
 public class TelegramUser implements Serializable {
 
-
-    @NotNull
     protected Long id;
 
-
-    @Size(
-            min = 1,
-            max = 255
-    )
-    @NotNull
     protected String firstName;
 
-
-    @Size(max = 255)
     protected String lastName;
 
-
-    @Pattern(regexp = "\\w{5,32}")
     protected String userName;
 
-
-    @Size(
-            min = 1,
-            max = 255
-    )
     protected String languageCode;
 
 
@@ -85,5 +65,18 @@ public class TelegramUser implements Serializable {
         return telegramUser;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        TelegramUser that = (TelegramUser) o;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
