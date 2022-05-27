@@ -7,6 +7,7 @@ import com.vdurmont.emoji.EmojiManager;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,23 +37,23 @@ public final class TelegramListUtils {
                 .append("<code>")
                 .append(list.getId())
                 .append("</code>");
-        sb.append("\n\n<b>state</b>: ")
-                .append(list.getState());
-        if (list.getMaxSize() != null) {
+        sb.append("\n\n<b>active</b>: ")
+                .append(!list.isFreeze());
+        if (list.getMaxSize() != Integer.MAX_VALUE) {
             sb.append("\n<b>max size</b>: ")
                     .append(list.getMaxSize());
         }
         sb.append("\n\n<b>start date</b>: ")
-                .append(dateFormat.format(list.getStartDate()));
+                .append(dateFormat.format(list.getStartDate().toLocalDateTime()));
         if (list.getEndDate() != null) {
             sb.append("\n<b>end date</b>: ")
-                    .append(dateFormat.format(list.getEndDate()));
+                    .append(dateFormat.format(list.getEndDate().toLocalDateTime()));
         }
         return sb.toString();
     }
 
-    public static String getInfo(List<TelegramList> lists) {
-        TelegramUser creator = lists.get(0).getCreator();
+    public static String getInfo(Collection<TelegramList> lists) {
+        TelegramUser creator = lists.iterator().next().getCreator();
         final StringBuilder sb = new StringBuilder();
         sb.append("<b>creator</b>: ")
                 .append("<b><a href=\"tg://user?id=%d\">".formatted(creator.getId()))
@@ -60,8 +61,6 @@ public final class TelegramListUtils {
                 .append("</a></b>");
         sb.append("\n\n<b>number of lists</b>: ")
                 .append(lists.size());
-        sb.append("\n<b>number of people on the lists</b>: ")
-                .append(lists.stream().map(TelegramList::getListedPlaces).mapToInt(List::size).sum());
         return sb.toString();
     }
 }

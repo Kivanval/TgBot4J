@@ -1,89 +1,50 @@
 package com.kivanval.telegram.models;
 
-import jakarta.persistence.*;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
-@Table(name = "LISTED_NUMBERS")
+
 @Getter
 @Setter
 @ToString
 public class ListedPlace implements Serializable {
 
     public enum State {
-        WAITING, AWAY, SERVED, DELETED
+        WAITING, AWAY, SERVED
     }
 
-    @EmbeddedId
     @Valid
     @NotNull
     protected ListedPlaceKey id;
 
-    @ManyToOne
-    @MapsId("listId")
-    @JoinColumn(
-            name = "list_id",
-            referencedColumnName = "id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "listed_numbers_list_id_fkey")
-    )
+
     @Valid
     @NotNull
     protected TelegramList list;
 
-    @ManyToOne
-    @MapsId("courseId")
-    @JoinColumn(
-            name = "user_id",
-            referencedColumnName = "id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "listed_numbers_user_id_fkey")
-    )
+
     @Valid
     @NotNull
     protected TelegramUser user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(
-            name = "state",
-            nullable = false
-    )
-    @NotNull
-    protected State state;
 
-    @Column(
-            name = "entry_date",
-            nullable = false
-    )
+    @NotNull
+    protected State state = State.WAITING;
+
     @PastOrPresent
     @NotNull
-    protected LocalDateTime entryDate;
+    protected LocalDateTime entryDate = LocalDateTime.now();
 
-    @Column(
-            name = "place_number",
-            nullable = false)
-    @Positive
-    @NotNull
-    protected Integer placeNumber;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        ListedPlace that = (ListedPlace) o;
-        return id != null && Objects.equals(id, that.id);
-    }
+    protected Integer priority;
 
     @Override
     public int hashCode() {

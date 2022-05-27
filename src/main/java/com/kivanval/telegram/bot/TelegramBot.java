@@ -58,6 +58,10 @@ public class TelegramBot extends AbilityBot {
         return new CreateAbility(this);
     }
 
+    public AbilityExtension replyToJoin() {
+        return new JoinAbility();
+    }
+
     public AbilityExtension replyToMyLists() {
         return new ListsAbility(this);
     }

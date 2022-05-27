@@ -2,9 +2,11 @@ package com.kivanval.telegram.abilities;
 
 import com.kivanval.telegram.bot.TelegramBot;
 import com.kivanval.telegram.constants.AbilityConstant;
+import com.kivanval.telegram.data.dao.JdbcTelegramListDao;
+import com.kivanval.telegram.data.repo.JdbcTelegramListRepository;
+import com.kivanval.telegram.data.repo.JdbcTelegramUserRepository;
 import com.kivanval.telegram.models.TelegramList;
 import com.kivanval.telegram.models.TelegramUser;
-import com.kivanval.telegram.utils.HibernateUtils;
 import com.kivanval.telegram.utils.TelegramListUtils;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Reply;
@@ -13,8 +15,11 @@ import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
+import static com.kivanval.telegram.constants.BotConfigConstant.DATA_SOURCE;
 import static com.kivanval.telegram.utils.UpdatePredicateFactory.hasMessageWith;
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
@@ -38,28 +43,31 @@ public class CreateAbility implements AbilityExtension {
     public ReplyFlow replyToCreate() {
 
         Reply replyToGetAlias = Reply.of((abilityBot, upd) -> {
-                    try (TelegramListJpaRepository listRepository = TelegramListJpaRepository
-                            .jpaInstance(HibernateUtils.getSession())) {
+                    JdbcTelegramListRepository listRepo = new JdbcTelegramListRepository(DATA_SOURCE);
+                    JdbcTelegramUserRepository userRepo = new JdbcTelegramUserRepository(DATA_SOURCE);
 
-                        TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());
+                    TelegramUser user = TelegramUser.from(upd.getMessage().getFrom());
+                    userRepo.addIfAbsent(user);
 
-                        String title = upd.getMessage().getText();
-                        title = title.equals(AUTO) ? TelegramListUtils.getAutoTitle() : title;
 
-                        TelegramList list = new TelegramList();
-                        list.setTitle(title);
-                        list.setCreator(user);
+                    String title = upd.getMessage().getText();
+                    title = title.equals(AUTO) ? TelegramListUtils.getAutoTitle() : title;
 
-                        listRepository.update(list);
+                    TelegramList list = new TelegramList();
+                    list.setTitle(title);
+                    user.addCreatedList(list);
 
-                        bot.silent().execute(SendMessage.builder()
-                                .disableWebPagePreview(true)
-                                .parseMode("HTML")
-                                .chatId(String.valueOf(getChatId(upd)))
-                                .text(REPLY_GET_TITLE.formatted(title))
-                                .build()
-                        );
-                    }
+                    listRepo.add(list);
+
+
+                    bot.silent().execute(SendMessage.builder()
+                            .disableWebPagePreview(true)
+                            .parseMode("HTML")
+                            .chatId(String.valueOf(getChatId(upd)))
+                            .text(REPLY_GET_TITLE.formatted(title))
+                            .build()
+                    );
+
                 },
                 Predicate.not(hasMessageWith("/" + AbilityConstant.CREATE)),
                 hasMessageValidateTitle()

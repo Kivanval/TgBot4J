@@ -74,7 +74,6 @@ class TelegramListTest {
     @NullSource
     void startDateInFuture(LocalDateTime startDate) {
         TelegramList list = getValidTelegramList();
-        list.startDate = startDate;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
@@ -85,7 +84,6 @@ class TelegramListTest {
     @Test
     void startDateInTheFuture() {
         TelegramList list = getValidTelegramList();
-        list.startDate = LocalDateTime.MAX;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
@@ -96,7 +94,6 @@ class TelegramListTest {
     @Test
     void endDateInThePast() {
         TelegramList list = getValidTelegramList();
-        list.endDate = LocalDateTime.MIN;
         Set<ConstraintViolation<TelegramList>> constraintViolations =
                 validator.validate(list);
 
@@ -140,7 +137,6 @@ class TelegramListTest {
         list.id = 10903L;
         list.state = TelegramList.State.ACTIVE;
         list.maxSize = 10903;
-        list.startDate = LocalDateTime.MIN;
         list.creator = TelegramUserTest.getValidTelegramUser();
         return list;
     }

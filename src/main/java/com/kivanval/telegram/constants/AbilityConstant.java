@@ -27,6 +27,12 @@ public final class AbilityConstant {
     public static final String LISTS = "lists";
 
     public static final String LISTS_DESCRIPTION = "shows existing lists created";
+
+    public static final String JOIN = "join";
+
+    public static final String JOIN_DESCRIPTION = "join the list by id";
+
+    public static final String JOIN_REPLY = "to be continued....";
     public static final String HELP = "help";
     public static final String HELP_DESCRIPTION = "gives out a help message with command descriptions";
     public static final String HELP_REPLY = parseToUnicode("""

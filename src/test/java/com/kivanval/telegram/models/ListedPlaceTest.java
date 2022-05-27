@@ -106,7 +106,6 @@ class ListedPlaceTest {
     @Test
     void numberIsNull() {
         ListedPlace place = getValidListedNumber();
-        place.placeNumber = null;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
                 validator.validate(place);
 
@@ -117,7 +116,6 @@ class ListedPlaceTest {
     @Test
     void numberLessThanZero() {
         ListedPlace place = getValidListedNumber();
-        place.placeNumber = 0;
         Set<ConstraintViolation<ListedPlace>> constraintViolations =
                 validator.validate(place);
 
@@ -132,7 +130,6 @@ class ListedPlaceTest {
         place.user = TelegramUserTest.getValidTelegramUser();
         place.state = ListedPlace.State.WAITING;
         place.entryDate = LocalDateTime.MIN;
-        place.placeNumber = 1;
         return place;
     }
 

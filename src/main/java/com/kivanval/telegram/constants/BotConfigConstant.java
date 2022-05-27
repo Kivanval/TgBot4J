@@ -1,7 +1,10 @@
 package com.kivanval.telegram.constants;
 
+import com.kivanval.telegram.utils.DataSourceFactory;
 import org.telegram.abilitybots.api.toggle.AbilityToggle;
 import org.telegram.abilitybots.api.toggle.DefaultToggle;
+
+import javax.sql.DataSource;
 
 public final class BotConfigConstant {
 
@@ -13,6 +16,8 @@ public final class BotConfigConstant {
 
     public static final AbilityToggle ABILITY_TOGGLE = new DefaultToggle();
     public static final long CREATOR_ID = 932231787;
+
+    public static final DataSource DATA_SOURCE = DataSourceFactory.getPostgresDataSource();
 
 
 }
