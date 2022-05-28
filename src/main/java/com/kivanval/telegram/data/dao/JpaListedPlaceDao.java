@@ -4,7 +4,6 @@ import com.kivanval.telegram.models.ListedPlace;
 import com.kivanval.telegram.models.ListedPlaceKey;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.LockModeType;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -49,19 +48,7 @@ public record JpaListedPlaceDao(EntityManager entityManager) implements ListedPl
 
     @Override
     public void create(ListedPlace entity) {
-        executeInsideTransaction(em -> {
-            TypedQuery<Integer> query = em.createQuery("""
-                            SELECT MAX(p.placeNumber)
-                                FROM ListedPlace p
-                                WHERE p.list = :list
-                            """, Integer.class)
-                    .setParameter("list", entity.getList())
-                    .setLockMode(LockModeType.PESSIMISTIC_WRITE);
-            Integer maxNumber = query.getSingleResult();
-            entity.setPlaceNumber(maxNumber + 1);
-            em.persist(entity);
-        });
-
+        executeInsideTransaction(em -> em.persist(entity));
     }
 
     @Override

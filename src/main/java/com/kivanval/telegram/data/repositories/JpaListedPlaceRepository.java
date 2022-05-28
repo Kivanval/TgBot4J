@@ -3,11 +3,20 @@ package com.kivanval.telegram.data.repositories;
 import com.kivanval.telegram.data.dao.JpaListedPlaceDao;
 import com.kivanval.telegram.models.ListedPlace;
 import com.kivanval.telegram.models.ListedPlaceKey;
+import com.kivanval.telegram.utils.HibernateUtils;
+import org.hibernate.Session;
 
 import java.util.List;
 import java.util.Optional;
 
-public record JpaListedPlaceRepository(JpaListedPlaceDao dao) implements ListedPlaceRepository {
+public class JpaListedPlaceRepository implements ListedPlaceRepository {
+
+
+    private final JpaListedPlaceDao dao;
+
+    public JpaListedPlaceRepository() {
+        this.dao = new JpaListedPlaceDao(HibernateUtils.getSession());
+    }
 
     @Override
     public List<ListedPlace> getAll() {

@@ -3,6 +3,8 @@ package com.kivanval.telegram.abilities;
 
 import com.kivanval.telegram.bot.TelegramBot;
 import com.kivanval.telegram.constants.AbilityConstant;
+import com.kivanval.telegram.data.repositories.JpaTelegramListRepository;
+import com.kivanval.telegram.data.repositories.JpaTelegramUserRepository;
 import com.kivanval.telegram.data.repositories.TelegramListRepository;
 import com.kivanval.telegram.data.repositories.TelegramUserRepository;
 import com.kivanval.telegram.models.TelegramList;
@@ -41,6 +43,7 @@ public class ListsAbility implements AbilityExtension {
              """);
 
     public static final String GENERAL_LISTS_TITLE = parseToUnicode("<u><b>General List Information</b></u>");
+
     public Ability replyToMyLists() {
         return Ability.builder()
                 .name(AbilityConstant.LISTS)
@@ -48,9 +51,8 @@ public class ListsAbility implements AbilityExtension {
                 .privacy(Privacy.PUBLIC)
                 .locality(Locality.USER)
                 .action(ctx -> {
-                    Session session = HibernateUtils.getSession();
-                    try (TelegramListRepository listRepository = TelegramListRepository.jpaInstance(session);
-                         TelegramUserRepository userRepository = TelegramUserRepository.jpaInstance(session)) {
+                    try (JpaTelegramListRepository listRepository = new JpaTelegramListRepository();
+                         JpaTelegramUserRepository userRepository = new JpaTelegramUserRepository()) {
 
                         userRepository.update(TelegramUser.from(ctx.user()));
 
@@ -63,7 +65,7 @@ public class ListsAbility implements AbilityExtension {
                                 .parseMode("HTML")
                                 .chatId(String.valueOf(ctx.chatId()))
                                 .text(replyText)
-                                .replyMarkup(generalListInfoKeyboard())
+                                .replyMarkup(generalListInfoKeyboard(AbilityConstant.LISTS))
                                 .build());
                     }
                 })
@@ -72,8 +74,7 @@ public class ListsAbility implements AbilityExtension {
 
     public Reply replyToButtons() {
         return Reply.of((abilityBot, upd) -> {
-                    Session session = HibernateUtils.getSession();
-                    try (TelegramListRepository listRepository = TelegramListRepository.jpaInstance(session)) {
+                    try (JpaTelegramListRepository listRepository = new JpaTelegramListRepository()) {
 
                         CallbackQuery query = upd.getCallbackQuery();
                         String data = query.getData();
@@ -88,7 +89,8 @@ public class ListsAbility implements AbilityExtension {
                                     .chatId(String.valueOf(getChatId(upd)))
                                     .text(replyText)
                                     .messageId(query.getMessage().getMessageId())
-                                    .replyMarkup(KeyboardFactory.listNavigationKeyboard(lists.size(), number))
+                                    .replyMarkup(KeyboardFactory
+                                            .listNavigationKeyboard(AbilityConstant.LISTS, lists.size(), number))
                                     .build());
                         } else if (data.contains(ONE_BY_ONE)) {
                             List<TelegramList> lists = listRepository
@@ -100,7 +102,8 @@ public class ListsAbility implements AbilityExtension {
                                     .parseMode("HTML")
                                     .chatId(String.valueOf(getChatId(upd)))
                                     .text(replyText)
-                                    .replyMarkup(KeyboardFactory.listNavigationKeyboard(lists.size(), 0))
+                                    .replyMarkup(KeyboardFactory
+                                            .listNavigationKeyboard(AbilityConstant.LISTS, lists.size(), 0))
                                     .build());
                         }
 

@@ -4,18 +4,18 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenerationTime;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "LISTED_NUMBERS")
+@Table(name = "LISTED_PLACES")
 @Getter
 @Setter
 @ToString
@@ -71,11 +71,10 @@ public class ListedPlace implements Serializable {
     protected LocalDateTime entryDate;
 
     @Column(
-            name = "place_number",
+            name = "ordinal",
             nullable = false)
-    @Positive
-    @NotNull
-    protected Integer placeNumber;
+    @org.hibernate.annotations.Generated(value = GenerationTime.INSERT)
+    protected Integer ordinal;
 
     @Override
     public boolean equals(Object o) {

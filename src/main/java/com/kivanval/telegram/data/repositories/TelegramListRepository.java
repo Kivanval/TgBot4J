@@ -20,10 +20,6 @@ public interface TelegramListRepository extends Repository<TelegramList, Long> {
 
     List<TelegramList> getByCreatorIdOrderByStartDate(Long creatorId);
 
-    static JpaTelegramListRepository jpaInstance(EntityManager em) {
-        return new JpaTelegramListRepository(new JpaTelegramListDao(em));
-    }
-
     void close();
 
 

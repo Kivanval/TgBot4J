@@ -1,5 +1,7 @@
 package com.kivanval.telegram.models;
 
+import com.kivanval.telegram.data.repositories.JpaListedPlaceRepository;
+import com.kivanval.telegram.utils.HibernateUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -24,116 +26,9 @@ class ListedPlaceTest {
         validator = factory.getValidator();
     }
 
-    @ParameterizedTest
-    @NullSource
-    void keyIsNull(ListedPlaceKey key) {
-        ListedPlace place = getValidListedNumber();
-        place.id = key;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
     @Test
-    void keyNotValid() {
-        ListedPlace place = getValidListedNumber();
-        place.id.listId = null;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    void listNotValid() {
-        ListedPlace place = getValidListedNumber();
-        place.list.id = null;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    void userNotValid() {
-        ListedPlace place = getValidListedNumber();
-        place.user.id = null;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    void stateInNull() {
-        ListedPlace place = getValidListedNumber();
-        place.state = null;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
-
-    @Test
-    void entryDateIsNull() {
-        ListedPlace place = getValidListedNumber();
-        place.entryDate = null;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    void entryDateInTheFuture() {
-        ListedPlace place = getValidListedNumber();
-        place.entryDate = LocalDateTime.MAX;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must be a date in the past or in the present", constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    void numberIsNull() {
-        ListedPlace place = getValidListedNumber();
-        place.placeNumber = null;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must not be null", constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    void numberLessThanZero() {
-        ListedPlace place = getValidListedNumber();
-        place.placeNumber = 0;
-        Set<ConstraintViolation<ListedPlace>> constraintViolations =
-                validator.validate(place);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("must be greater than 0", constraintViolations.iterator().next().getMessage());
-    }
-
-    static ListedPlace getValidListedNumber() {
-        ListedPlace place = new ListedPlace();
-        place.id = ListedPlaceKeyTest.getValidListedNumberKey();
-        place.list = TelegramListTest.getValidTelegramList();
-        place.user = TelegramUserTest.getValidTelegramUser();
-        place.state = ListedPlace.State.WAITING;
-        place.entryDate = LocalDateTime.MIN;
-        place.placeNumber = 1;
-        return place;
+    void insertTest() {
+        JpaListedPlaceRepository listedPlaceRepository = new JpaListedPlaceRepository(HibernateUtils.getSession());
     }
 
 }

@@ -57,7 +57,7 @@ public class TelegramList implements Serializable {
 
     @ManyToOne(
             fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(
             name = "creator_id",
             referencedColumnName = "id",

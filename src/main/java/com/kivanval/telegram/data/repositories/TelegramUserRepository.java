@@ -16,9 +16,5 @@ public interface TelegramUserRepository extends Repository<TelegramUser, Long> {
 
     List<TelegramUser> getUsersByListId(Long listId);
 
-    static JpaTelegramUserRepository jpaInstance(EntityManager em) {
-        return new JpaTelegramUserRepository(new JpaTelegramUserDao(em));
-    }
-
     void close();
 }

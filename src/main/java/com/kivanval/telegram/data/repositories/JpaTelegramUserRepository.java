@@ -2,11 +2,18 @@ package com.kivanval.telegram.data.repositories;
 
 import com.kivanval.telegram.data.dao.JpaTelegramUserDao;
 import com.kivanval.telegram.models.TelegramUser;
+import com.kivanval.telegram.utils.HibernateUtils;
+import org.hibernate.Session;
 
 import java.util.List;
 import java.util.Optional;
 
-public record JpaTelegramUserRepository(JpaTelegramUserDao dao) implements TelegramUserRepository {
+public class JpaTelegramUserRepository implements TelegramUserRepository {
+    private final JpaTelegramUserDao dao;
+
+    public JpaTelegramUserRepository() {
+        this.dao = new JpaTelegramUserDao(HibernateUtils.getSession());
+    }
 
     @Override
     public List<TelegramUser> getAll() {
